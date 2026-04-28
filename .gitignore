@@ -1,0 +1,32 @@
+# Data files are documented in data/README.md and are not tracked publicly.
+data/*
+!data/README.md
+
+# Generated outputs
+results/*
+!results/.gitkeep
+logs/*
+!logs/.gitkeep
+audit/logs/*
+!audit/logs/.gitkeep
+audit/outputs/*
+!audit/outputs/.gitkeep
+
+# Large compiled paper artifacts
+paper/*.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/figures/*
+!paper/figures/.gitkeep
+
+# Local/editor/runtime files
+.Rhistory
+.RData
+.Rproj.user/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

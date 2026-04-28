@@ -1,0 +1,78 @@
+﻿# Proposed fix for scripts/06_descriptive_stats.py
+#
+# Bug: is_proportional filter (line 108) is case-sensitive, but TSE 2016 raw
+# data has DS_CARGO in UPPERCASE ('PREFEITO','VEREADOR'). 2022 federais also
+# UPPERCASE ('DEPUTADO ESTADUAL' etc.) but those are out of paper scope.
+#
+# Consequence for 2016 Vereador: 267,755 party-legend votes (2-digit
+# NR_VOTAVEL) are mis-classified as candidate votes, contaminating HHI, ENC,
+# margin, and n_candidates for every Vereador 2016 polling station.
+#
+# Impact (means across stations, Vereador 2016):
+#   HHI              0.0462 (buggy)  vs  0.0518 (correct)   -12%
+#   ENC              37.00  (buggy)  vs  33.47  (correct)   +10%
+#   margin           0.0545 (buggy)  vs  0.0583 (correct)    -7%
+#   n_candidates     210.4  (buggy)  vs  193.0  (correct)   +17 spurious
+#
+# Fix: normalize DS_CARGO to Title Case right after filtering first round /
+# metro RJ, BEFORE building is_proportional / is_legenda.
+#
+# ─── DIFF (scripts/06_descriptive_stats.py) ──────────────────────────────────
+
+--- a/scripts/06_descriptive_stats.py
++++ b/scripts/06_descriptive_stats.py
+@@ -91,6 +91,15 @@ def compute_competition_measures(df_votes, cand_status=None):
+     if len(df) == 0:
+         return pd.DataFrame()
+
++    # Normalize DS_CARGO to Title Case — raw TSE mixes cases across years
++    # (2016 is 'VEREADOR', 2022 is 'DEPUTADO ESTADUAL', others Title Case).
++    # Without this, is_proportional (below) returns False for 2016 Vereador,
++    # which causes party-legend votes (NR_VOTAVEL with 2 digits) to be
++    # classified as candidate votes, contaminating HHI/ENC/margin.
++    df['DS_CARGO'] = (df['DS_CARGO'].astype(str)
++                                     .str.strip()
++                                     .str.lower()
++                                     .str.title())
++
+     df['QT_VOTOS'] = pd.to_numeric(df['QT_VOTOS'], errors='coerce').fillna(0).astype(int)
+
+     # Separate candidate votes from special votes (null, blank) and party legend
+
+# ─── Post-fix validation steps ───────────────────────────────────────────────
+#
+# After applying the fix:
+#
+# 1. Re-run script 06:
+#    python scripts/06_descriptive_stats.py
+#    → regenerates dados/electoral_competition_measures.csv
+#
+# 2. Re-run downstream pipeline (these already normalize DS_CARGO defensively,
+#    so no code change needed — they just consume the corrected CSV):
+#    Rscript scripts/83_sumstats_baseline.R        → tab83_sumstats_wide.csv
+#    Rscript scripts/70_main_results.R             → tab70_main_overall.csv
+#    Rscript scripts/89_dynamic_agg_all.R          → tab89_dynamic_overall.csv
+#    Rscript scripts/79_event_study_fixed.R        → event-study figs/tabs
+#    Rscript scripts/80_honest_did.R               → fig80_*, tab80
+#    Rscript scripts/87_balance_table.R            → tab87
+#
+# 3. Re-run audit:
+#    bash audit/scripts/run_all.sh
+#
+# 4. Expected changes in paper:
+#    - Table 1 Panel B (Vereador baselines):
+#        militia ENC 33.16 → ~ +0.7 (≈33.87)
+#        drug    ENC 30.39 → ~ +0.7 (≈31.10)
+#        NT      ENC 35.82 → ~ +0.7 (≈36.5)
+#        (all HHI and margin likewise slightly shifted)
+#    - Table 5 (CS-DID Vereador NYT): ATTs will shift but all expected to
+#      remain statistically indistinguishable from zero (paper conclusion
+#      survives). Quantify after re-running.
+#    - Appendix B Vereador NT: same as above, plus potential sign changes
+#      in the already-marginal "ENC" NT estimates.
+#    - Prefeito results (Tables 1 Panel A, 3, 4, 5 first panel, Appendix B):
+#      UNCHANGED (Prefeito is majority race, no legenda votes).
+#
+# 5. Update main.tex baselines in §4 (mayoral only if numbers change — they
+#    should not) and in §4.2 if Vereador magnitudes materially shift.
+

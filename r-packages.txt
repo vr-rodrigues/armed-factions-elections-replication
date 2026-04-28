@@ -1,0 +1,7 @@
+data.table
+did
+fixest
+fwildclusterboot
+ggplot2
+HonestDiD
+
