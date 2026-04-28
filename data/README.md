@@ -41,7 +41,7 @@ data/raw/tse/locais_votacao/
 ## 2. Fogo Cruzado territory maps
 
 Source: Fogo Cruzado Institute  
-URL: <https://fogocruzado.org.br/>
+Official repository: <https://github.com/fogocruzadoapp/mapafc>
 
 Requested data:
 

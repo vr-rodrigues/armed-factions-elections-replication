@@ -32,7 +32,7 @@ The analysis combines three inputs:
    - Voting-location files: `locais_votacao`
    - Election years used in the paper: 2008, 2012, 2016, 2020, and 2024 for municipal elections; 2010, 2014, 2018, and 2022 voting-location files are used for geocoding continuity.
 
-2. **Armed-faction territory maps.** Obtain annual maps for metropolitan Rio de Janeiro from the Fogo Cruzado Institute: <https://fogocruzado.org.br/>.
+2. **Armed-faction territory maps.** Obtain the Historical Map of Armed Groups in Rio de Janeiro from the Fogo Cruzado GitHub repository: <https://github.com/fogocruzadoapp/mapafc>.
    - Years used: 2007-2024.
    - Redistribution of original polygons is subject to Fogo Cruzado's data-use terms.
    - The paper uses derived polling-station exposure indicators and stable faction-type classifications.
