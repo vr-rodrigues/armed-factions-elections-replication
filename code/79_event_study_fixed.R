@@ -26,6 +26,8 @@ library(ggplot2)
 .script_dir <- if (!is.na(.script_file)) dirname(normalizePath(.script_file)) else getwd()
 BASE_DIR <- normalizePath(file.path(.script_dir, ".."), winslash = "/", mustWork = TRUE)
 OUT_DIR  <- file.path(BASE_DIR, "results")
+FIG_DIR  <- file.path(BASE_DIR, "paper", "figures")
+dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 
 cat("============================================================\n")
 cat("79_event_study_fixed.R — Corrected CS-DID event-studies\n")
@@ -45,7 +47,7 @@ dt_chg   <- fread(file.path(BASE_DIR, "data",
 dt_elec[, loc_id := as.character(loc_id)]
 dt_elec[, DS_CARGO := tools::toTitleCase(tolower(trimws(DS_CARGO)))]
 dt_elec[, election_year := as.numeric(election_year)]
-for (col in c("hhi", "enc", "margin_victory"))
+for (col in c("hhi", "enc", "margin_victory", "total_votes"))
   dt_elec[, (col) := as.numeric(get(col))]
 
 dt_aptos[, loc_id := as.character(loc_id)]
@@ -95,13 +97,16 @@ dt_faction <- merge(
 )
 dt_faction <- dt_faction[election_year %in% elec_years]
 dt_faction <- dt_faction[!is.na(qt_aptos) & qt_aptos > 0]
+dt_faction[, turnout := total_votes / qt_aptos]
+dt_faction[is.na(turnout) | is.infinite(turnout) | turnout <= 0 | turnout > 1,
+           turnout := NA_real_]
 
 cat(sprintf("Faction panel: %d obs | %d locs | %d municipalities\n",
             nrow(dt_faction), uniqueN(dt_faction$loc_id),
             uniqueN(dt_faction$CD_MUNICIPIO)))
 
 # Municipality demeaning
-outcomes_raw <- c("hhi", "enc", "margin_victory")
+outcomes_raw <- c("hhi", "enc", "margin_victory", "turnout")
 for (oc in outcomes_raw) {
   dm_col <- paste0(oc, "_dm")
   dt_faction[, (dm_col) := get(oc) - mean(get(oc), na.rm = TRUE),
@@ -204,9 +209,13 @@ for (sp in specs) {
   for (ov in outcome_variants) {
     cat(sprintf("\n  -- %s outcomes --\n", ov$type))
     for (cargo in cargos) {
-      for (i in seq_along(ov$cols)) {
-        oc_var <- ov$cols[i]
-        oc_raw <- outcomes_raw[i]
+      cols_this <- ov$cols
+      if (cargo == "Vereador")
+        cols_this <- cols_this[!grepl("^turnout", cols_this)]
+
+      for (i in seq_along(cols_this)) {
+        oc_var <- cols_this[i]
+        oc_raw <- sub("_dm$", "", oc_var)
         lbl <- sprintf("%s / %s / %s [%s]", sp$name, cargo, oc_raw, ov$type)
         es  <- run_event_study(d_nyt[DS_CARGO == cargo], oc_var, lbl)
         if (!is.null(es)) {
@@ -230,7 +239,8 @@ cat(sprintf("\n\nWritten: %s (%d rows)\n",
 outcome_labels <- c(
   hhi            = "HHI",
   enc            = "ENC",
-  margin_victory = "Margin of Victory"
+  margin_victory = "Margin of Victory",
+  turnout        = "Turnout"
 )
 
 make_es_plot <- function(d_es, y_lab) {
@@ -269,7 +279,11 @@ make_es_plot <- function(d_es, y_lab) {
 for (sp_name in c("Militia", "Drug")) {
   for (ov_type in c("raw", "demeaned")) {
     for (cg in cargos) {
-      for (oc in outcomes_raw) {
+      outcomes_this <- outcomes_raw
+      if (cg == "Vereador")
+        outcomes_this <- setdiff(outcomes_this, "turnout")
+
+      for (oc in outcomes_this) {
         d_es <- tab_es[spec == sp_name & cargo == cg & outcome == oc &
                        outcome_type == ov_type]
         if (nrow(d_es) == 0) next
@@ -280,7 +294,8 @@ for (sp_name in c("Militia", "Drug")) {
 
         fn <- sprintf("fig79_es_%s_%s_%s_%s.pdf",
                       tolower(sp_name), ov_type, tolower(cg), oc)
-        ggsave(file.path(OUT_DIR, fn), p, width = 9, height = 3.5)
+        ggsave(file.path(OUT_DIR, fn), p, width = 6, height = 4)
+        ggsave(file.path(FIG_DIR, fn), p, width = 6, height = 4)
       }
     }
   }
@@ -289,8 +304,8 @@ for (sp_name in c("Militia", "Drug")) {
 cat("\n============================================================\n")
 cat("DONE — 79_event_study_fixed.R\n")
 cat("============================================================\n")
-cat(sprintf("  %d event-study PDFs written to %s/\n",
-            2 * 2 * 2 * 3, OUT_DIR))
-cat("  Naming: fig79_es_{militia|drug}_{raw|demeaned}_{prefeito|vereador}_{hhi|enc|margin_victory}.pdf\n")
+cat(sprintf("  %d event-study PDFs written to %s/ and %s/\n",
+            2 * 2 * 2 * 3 + 2 * 2 * 1, OUT_DIR, FIG_DIR))
+cat("  Naming: fig79_es_{militia|drug}_{raw|demeaned}_{prefeito|vereador}_{hhi|enc|margin_victory}.pdf; turnout only for prefeito\n")
 
 

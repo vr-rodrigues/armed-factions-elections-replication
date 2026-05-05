@@ -1,0 +1,33 @@
+\begin{table}[H]
+\centering
+\caption{Mechanism Outcomes in Mayoral Races}\label{tab:mechanisms_prefeito}
+\footnotesize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & \textbf{Militia} ($N = 398$) & \textbf{Drug Factions} ($N = 240$) \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Panel A. Candidate selection}} \\
+Winning candidate vote share (pp) & $+4.48^{***}$ & $-3.12$ \\
+ & $(0.99)$ & $(1.90)$ \\
+Competitive candidates at 1 pp (count) & $-0.56^{***}$ & $+0.11$ \\
+ & $(0.11)$ & $(0.18)$ \\
+Top candidate vote share (pp) & $+4.57^{***}$ & $-0.32$ \\
+ & $(0.98)$ & $(1.61)$ \\
+Top-3 candidates vote share (pp) & $+2.90^{***}$ & $-1.01$ \\
+ & $(0.66)$ & $(1.35)$ \\
+Public-admin occupation share (pp) & $+4.78^{***}$ & $+3.38$ \\
+ & $(1.18)$ & $(2.89)$ \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Panel B. Campaign finance}} \\
+Expenses, vote-weighted (2024 BRL 100k) & $+4.28^{**}$ & $-1.22$ \\
+ & $(2.12)$ & $(3.19)$ \\
+Revenue, vote-weighted (2024 BRL 100k) & $+7.50^{***}$ & $+0.31$ \\
+ & $(2.89)$ & $(4.44)$ \\
+Expenses per vote (2024 BRL) & $-0.55^{**}$ & $+1.35$ \\
+ & $(0.26)$ & $(1.28)$ \\
+High-spending vote share (pp) & $+1.58^{**}$ & $-0.12$ \\
+ & $(0.63)$ & $(2.08)$ \\
+\bottomrule
+\end{tabular}
+\tabnotes{\textit{Notes:} Preferred not-yet-treated CS-DID estimates. Each coefficient is the dynamically aggregated ATT after a polling station enters faction territory. Standard errors in parentheses use the \texttt{did} influence-function bootstrap clustered at the polling-station level. Campaign-finance amounts are deflated to 2024 reais using IPCA from BCB/SGS series 433 and matched to candidate votes using TSE candidate identifiers; match-quality diagnostics are reported in the replication outputs. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\end{table}

@@ -42,9 +42,10 @@ run_r code/86_equality_test_mde.R
 run_r code/87_balance_table.R
 run_r code/88_turnout_outcome.R
 run_r code/89_dynamic_agg_all.R
+run_r code/90_turnout_decomposition.R
+run_r code/91_exposure_duration.R
 run_py code/71_map_factions.py
 run_py code/72_rj_capital_map.py
 
 echo ""
 echo "Replication complete. Outputs are in: $ROOT/results"
-

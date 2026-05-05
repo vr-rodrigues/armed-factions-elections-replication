@@ -4,7 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{natbib}
+\usepackage[round]{natbib}
 \usepackage{float}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -12,10 +12,11 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{subcaption}
+\usepackage{array}
 \usepackage{tabularx}
 \usepackage{threeparttable}
 
-\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=black}
 \bibliographystyle{plainnat}
 \graphicspath{{figures/}}
 
@@ -24,17 +25,17 @@
 
 \newcommand{\tabnotes}[1]{\par\vspace{3pt}\noindent\begin{minipage}{\linewidth}\footnotesize #1\end{minipage}}
 
-\title{\textbf{Armed Factions and Local Electoral Competition:\ Evidence from Metropolitan Rio de Janeiro}}
+\title{\textbf{Armed Factions and Local Electoral Competition}}
 \author{
 	\begin{minipage}[t]{0.33\textwidth}
 		\centering
-		Valdemar Pinho Neto\footnote{E-mail: \href{mailto:valdemar}{valdemar.pinhoneto@gmail.com}. Valdemar Neto also acknowledges that this study was partially funded by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brazil, Finance Code 001.}\\[0.25em]
+		Valdemar Pinho Neto\footnote{E-mail: \href{mailto:valdemar.pinhoneto@gmail.com}{valdemar.pinhoneto@gmail.com}. Valdemar Neto also acknowledges that this study was partially funded by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES), Brazil, Finance Code 001.}\\[0.25em]
 		\small FGV EPGE
 	\end{minipage}
 	\vspace{1em}
         \begin{minipage}[t]{0.33\textwidth}
 		\centering
-		Victor Rangel\footnote{E-mail: \href{mailto:victorr}{victorrsr@al.insper.edu.br}.}\\[0.25em]
+		Victor Rangel\footnote{E-mail: \href{mailto:victorrsr@al.insper.edu.br}{victorrsr@al.insper.edu.br}.}\\[0.25em]
 		\small Insper
 	\end{minipage}
 	\vspace{1em}
@@ -45,7 +46,7 @@
 \maketitle
 
 \begin{abstract}
-\noindent What happens to local democracy when weak states share territorial authority with armed groups? We study metropolitan Rio de Janeiro, where paramilitary militias and drug-trafficking organizations control neighborhoods but differ in their relationship with the state. We match annual faction territory maps to polling stations across five municipal elections and estimate staggered difference-in-differences effects relative to not-yet-treated stations of the same faction type. Militia territorial expansion reduces mayoral competition. Vote concentration rises by 0.039, the effective number of candidates falls by 0.347, the margin of victory widens by 5.2 percentage points, and turnout rises by 1.8 percentage points. Drug-faction expansion produces no detectable effects under the same design. Neither faction type affects city-council races. The asymmetry suggests that territorial control becomes electoral capture when criminal governance is embedded in local state authority.
+\noindent What happens to local democracy when weak states share territorial authority with armed groups? We study metropolitan Rio de Janeiro, where paramilitary militias and drug-trafficking factions control neighborhoods but differ in their relationship with the state. We match annual faction territory maps to polling stations across five municipal elections and estimate staggered difference-in-differences effects relative to not-yet-treated stations of the same faction type. Militia territorial entry is associated with lower mayoral competition. Vote concentration (HHI) rises by 0.039 and the margin of victory widens by 5.2 percentage points; the effective number of candidates falls by 0.347, an arithmetic translation of the HHI movement under the Laakso-Taagepera identity $\text{ENC}\equiv 1/\text{HHI}$. Turnout rises by 1.8 percentage points. Mechanism estimates show that votes shift toward elected, locally leading, and better-financed mayoral candidates, with vote-weighted spending per vote falling. Drug-trafficking faction expansion produces no comparable estimates under the same design. Neither faction type affects city-council races. The asymmetry is consistent with electoral capture being concentrated where criminal governance is embedded in local state authority, the institutional channel documented separately by \citet{pantaleao2025elections}.
 
 \vspace{4pt}
 \noindent\textit{JEL}: D72, D74, K42, O17 \quad \textit{Keywords}: electoral competition, militias, organized crime, difference-in-differences, staggered treatment, Brazil
@@ -56,27 +57,29 @@
 \section{Introduction}
 %==========================================================================
 
-Weak states rarely lose territorial authority in a uniform way. They share it with armed organizations whose relationship to public institutions ranges from confrontation to collusion \citep{acemoglu2020weak, blattman2023gangrule}. This paper asks whether the institutional form of criminal governance determines when territorial control becomes electoral capture. The question matters for development economics because local elections allocate control over contracts, land-use decisions, regulatory enforcement, and public security priorities in places where state authority is most contested.
+Weak states rarely lose territorial authority in a uniform way. They often share it with armed organizations whose ties to public institutions range from confrontation to collusion \citep{acemoglu2020weak, blattman2025gangrule}. Organized crime can then enter elections by controlling votes, using violence around campaigns, or exchanging armed support for protection and economic rents \citep{defeo2017mafia, alesina2019organized, acemoglu2013monopoly}. We ask whether the institutional form of criminal governance determines when territorial control becomes electoral capture. Local elections provide a sharp test because they allocate contracts, land-use decisions, regulatory enforcement, and public-security priorities where state authority is contested.
 
-Metropolitan Rio de Janeiro is a useful setting because the main armed groups share territory but differ in their links to the state. Paramilitary militias and drug-trafficking factions control neighborhoods where millions of voters live \citep{monteiro2023enterprises}. Drug-trafficking organizations govern through armed presence and confrontation with public security forces \citep{arias2006drugs}. Militias grew out of networks of current and former police, firefighters, and military personnel. They extract rents from service monopolies in gas, internet, transit, and real estate, and they participate in elections through voter mobilization, campaign finance, and political protection networks \citep{pantaleao2025elections}. The prediction is that territorial control should compress electoral competition when armed governance is embedded in local state authority. The same effect should be weaker when armed governance is mainly confrontational.
+Metropolitan Rio de Janeiro places this contrast inside one urban economy. Paramilitary militias and drug-trafficking factions control neighborhoods where millions of voters live \citep{monteiro2023enterprises}. Drug-trafficking factions govern through armed presence and confrontation with public security forces \citep{arias2006drugs}. Militias grew out of networks of current and former police, firefighters, and military personnel. They extract rents from service monopolies in gas, internet, transit, and real estate. They also participate in elections through voter mobilization, campaign finance, and political protection networks \citep{pantaleao2025elections}. These rents depend on municipal authority over enforcement, licensing, land use, contracts, and appointments. The hypothesis we take to the data is that territorial control should compress electoral competition when armed governance is embedded in local state authority, while it should be weaker when armed governance is mainly confrontational.
 
-We match annual georeferenced territory maps from Fogo Cruzado to polling-station returns from five municipal elections in the 20 municipalities of metropolitan Rio de Janeiro. Identification comes from staggered territorial expansion. As faction polygons grow across election cycles, previously untreated polling stations enter faction territory at different times. We estimate heterogeneity-robust average treatment effects \citep{callaway2021did} separately by faction type and compare newly treated stations with not-yet-treated stations of the same faction type. This comparison removes the fixed differences between inside-territory and outside-any-territory stations that would confound a never-treated design.
+We match annual georeferenced territory maps from Fogo Cruzado to polling-station returns from five municipal elections in the 20 municipalities of metropolitan Rio de Janeiro. Identification comes from the staggered timing of territorial entry. As faction polygons grow across election cycles, previously untreated polling stations enter faction territory at different times. We estimate heterogeneity-robust average treatment effects \citep{callaway2021did} separately by faction type. Newly treated stations are compared with not-yet-treated stations of the same faction type. The comparison removes the fixed differences between inside-territory and outside-any-territory stations that would confound a never-treated design. Identification rests on the parallel-trends assumption stated in equation~\eqref{eq:cpt} below; we discuss how reverse causality, geographic selection, and the COVID-19 cohort qualify a strict causal reading.
 
-Militia territorial expansion reduces mayoral electoral competition on all three measures. Under the preferred not-yet-treated specification, vote concentration rises by 0.039, the effective number of candidates falls by 0.347, the margin of victory widens by 5.2 percentage points, and turnout rises by 1.8 percentage points. Relative to pre-treatment militia baselines, these estimates imply an 11 percent increase in concentration, a 10 percent decline in effective candidates, and a 25 percent wider mayoral margin. Drug-faction expansion produces no detectable effects on the same outcomes under the same design. Formal equality tests reject equality between militia and drug-faction effects for all three mayoral competition outcomes. Neither faction type affects open-list proportional city-council races, which is consistent with armed groups concentrating political resources where executive rents are largest and candidate coordination is easiest.
+Under the preferred not-yet-treated specification, militia territorial entry is associated with lower mayoral competition: vote concentration (HHI) rises by 0.039, the margin of victory widens by 5.2 percentage points, and turnout rises by 1.8 percentage points. The effective number of candidates falls by 0.347, an arithmetic translation of the HHI movement under the Laakso-Taagepera identity $\text{ENC}\equiv 1/\text{HHI}$ rather than independent corroboration. Relative to pre-treatment militia baselines, these estimates imply an 11 percent increase in concentration and a 25 percent wider mayoral margin. Drug-trafficking faction expansion produces no detectable estimates on the same outcomes under the same design. Neither faction type moves open-list proportional city-council races, which is consistent with armed groups concentrating political resources where executive rents are largest and candidate coordination is easiest.
 
-The paper contributes a polling-station-level estimate of how armed territorial control affects local elections. It uses Fogo Cruzado annual territory polygons for causal electoral analysis and compares militia and drug-faction expansion inside the same metropolitan economy. The contrast separates the political consequences of territorial control from the institutional form of criminal governance. The results also complement work on the elections-to-militia channel \citep{pantaleao2025elections}. That work shows how elected officials protect militia expansion. We document the reverse channel, in which militia territorial expansion compresses mayoral competition. The evidence points to a feedback loop in weak-state environments, where territorial control and electoral capture reinforce each other when armed groups are embedded in the state \citep{lessing2021, acemoglu2020weak}.
+We estimate the electoral side of armed territorial control at the polling-station level. The design uses Fogo Cruzado annual territory polygons and compares militia and drug-trafficking faction expansion inside the same metropolitan economy. The comparison separates territorial control from the institutional form of criminal governance. It complements evidence from Rio that criminal governance can affect elections through candidate gatekeeping and voter corralling \citep{trudeau2025criminal}. The results also speak to the elections-to-militia channel documented by \citet{pantaleao2025elections}, who show that elected officials protect militia expansion. We document estimates consistent with the reverse channel, in which militia territorial entry coincides with mayoral competition compression. We do not estimate both directions inside this paper: a feedback interpretation requires combining our estimates with the institutional channel in \citet{pantaleao2025elections}. Read together, the two sets of estimates describe complementary, mutually reinforcing channels rather than a single jointly estimated equilibrium \citep{lessing2021, acemoglu2020weak, acemoglu2013monopoly}.
+
+The institutional contrast in metropolitan Rio motivates the empirical design that follows.
 
 %==========================================================================
 \section{Institutional Context}\label{sec:context}
 %==========================================================================
 
-Rio de Janeiro's armed factions emerged in the 1980s with the expansion of cocaine trafficking through the city's \emph{favelas} \citep{arias2006drugs}. The Comando Vermelho (CV) was the first major drug trafficking organization, followed by rivals Terceiro Comando Puro (TCP) and Amigos dos Amigos (ADA). These factions control territory through armed force, collecting ``taxes'' from residents and businesses and regulating daily life within their domains \citep{lessing2017logics}.
+Rio de Janeiro's armed factions emerged in the 1980s with the expansion of cocaine trafficking through the city's \emph{favelas} \citep{arias2006drugs}. The Comando Vermelho (CV) was the first major drug-trafficking faction, followed by rivals Terceiro Comando Puro (TCP) and Amigos dos Amigos (ADA). These factions control territory through armed force, collecting ``taxes'' from residents and businesses and regulating daily life within their domains \citep{lessing2017logics}. Throughout the paper we refer to these groups as \emph{drug-trafficking factions} and use the shorthand ``drug'' only in tables and figures where space is constrained.
 
-Militias\footnote{Paramilitary groups composed primarily of active and retired police, firefighters, and military personnel} expanded rapidly from the early 2000s, particularly in Rio's West Zone \citep{pantaleao2025elections}. Unlike drug factions, militias monopolize the provision of cooking gas, internet, public transit, and real estate within their territories. By 2024, militia-controlled territories covered a larger area than drug factions in the metropolitan region.
+Militias\footnote{Paramilitary groups composed primarily of active and retired police, firefighters, and military personnel} expanded rapidly from the early 2000s, particularly in Rio's West Zone \citep{pantaleao2025elections}. Unlike drug-trafficking factions, militias monopolize the provision of cooking gas, internet, public transit, and real estate within their territories. By 2024, militia-controlled territories covered a larger area than drug-trafficking factions in the metropolitan region.
 
-Criminal-governance theory clarifies the contrast between the two groups. \citet{magaloni2020killing} classify regimes by territorial monopoly, the relationship with the state, and treatment of the community. Rio's drug factions usually fit \emph{Insurgent} or \emph{Bandit} regimes, where armed groups confront state forces. Militias fit \emph{Symbiotic} or \emph{Predatory} regimes, where criminal rule is tied to collusion. \citet{blattman2023gangrule} make a related point. State rule and criminal rule can complement each other when armed groups hold rents worth protecting. Militias are an extreme case because the police-militia overlap brings criminal governance into the state's own personnel networks. \citet{monteiro2023enterprises} document the economic side of this contrast. Militias dominate local provision of cooking gas, cable TV and internet, water and electricity, and real estate. Drug factions remain more concentrated in drug retail. Broader economic stakes raise the value of local political control.
+The two groups occupy different positions in criminal-governance theory. \citet{magaloni2020killing} classify regimes by territorial monopoly, the relationship with the state, and treatment of the community. Rio's drug-trafficking factions usually fit \emph{Insurgent} or \emph{Bandit} regimes, where armed groups confront state forces. Militias fit \emph{Symbiotic} or \emph{Predatory} regimes, where criminal rule is tied to collusion. In \citet{blattman2025gangrule}, state rule and criminal rule can complement each other when armed groups hold rents worth protecting. Militias are an extreme case because the police-militia overlap brings criminal governance into the state's own personnel networks. In Brazil, politicians embedded in law-enforcement networks can distort local security provision even when formal municipal authority over policing is limited \citep{novaes2023laworder}. \citet{monteiro2023enterprises} document the economic side of the militia-drug contrast. Militias dominate local provision of cooking gas, cable TV, internet, water, electricity, and real estate. Drug-trafficking factions remain more concentrated in drug retail. Broader economic stakes raise the value of local political control.
 
-The expected electoral effect differs by faction type. Drug factions operate in a confrontational relationship with the state and have narrower economic footprints. This limits both their incentive and their institutional capacity to convert territorial control into vote shares. Militias operate through collusive relationships and hold rents that depend on local-state cooperation. They have stronger reasons to translate territory into electoral capture \citep{trejo2020votes, snyder2009protection, pantaleao2025elections}. Militia influence should grow as territory is held over successive election cycles. Drug-faction expansion should have a weaker effect on electoral competition. Figure~\ref{fig:maps} maps faction territories and polling stations in 2008 and 2024.
+The expected electoral effect should therefore vary by faction type. Drug-trafficking factions operate in a confrontational relationship with the state and have narrower economic footprints. That limits their incentive and institutional capacity to convert territorial control into vote shares. Militias operate through collusive relationships and hold rents that depend on local-state cooperation. They have stronger reasons to translate territory into electoral capture \citep{trejo2020votes, snyder2009protection, pantaleao2025elections}. Rio evidence shows that criminal groups can broker votes through gatekeeping and corralling \citep{trudeau2025criminal}. The prediction here concerns which form of territorial expansion should measurably compress competition under the same design. Militia influence should be visible as territory is held across election cycles. Drug-trafficking faction expansion should produce a weaker electoral signature. Figure~\ref{fig:maps} maps faction territories and polling stations in 2008 and 2024.
 
 \begin{figure}[H]
 \centering
@@ -93,42 +96,56 @@ The expected electoral effect differs by faction type. Drug factions operate in 
 \caption{2024}
 \end{subfigure}
 \caption{Faction Territories and Polling Stations in Metropolitan Rio de Janeiro}\label{fig:maps}
-\tabnotes{\textit{Notes:} Yellow shading indicates militia territory and red shading indicates drug-faction territory. Triangles are polling stations inside militia territory, circles are polling stations inside drug territory, and grey crosses are stations outside any faction territory. Municipal boundaries shown in grey. Source: Fogo Cruzado annual territory maps.}
+\tabnotes{\textit{Notes:} Yellow shading indicates militia territory and red shading indicates drug-trafficking-faction territory. Triangles are polling stations inside militia territory, circles are polling stations inside drug-trafficking territory, and grey crosses are stations outside any faction territory. Municipal boundaries shown in grey. Source: Fogo Cruzado annual territory maps.}
 \end{figure}
 
 %==========================================================================
 \section{Data and Empirical Strategy}\label{sec:data}
 %==========================================================================
 
-The analysis is at the polling-station-by-election-year level. We construct treatment from annual faction territory maps produced by the Fogo Cruzado Institute, a Rio civil-society observatory that georeferences control polygons for paramilitary militias and drug-trafficking organizations in metropolitan Rio de Janeiro \citep{fogocruzado2024}. The maps combine official gazettes, local press coverage, and triangulated incident reports on armed confrontation. Annual polygons cover 2007 to 2024. Appendix~\ref{app:measurement} documents treatment construction and validation. The measure captures the timing of \textit{de facto} territorial control as recorded by Fogo Cruzado. It is not an administrative or legal measure. Detection may be more systematic for militia territory, which often operates through visible service monopolies, than for drug territory, which is more fluid and covert.
+The analysis is at the polling-station-by-election-year level. We construct treatment from annual faction territory maps produced by the Fogo Cruzado Institute, a Rio civil-society observatory that georeferences control polygons for paramilitary militias and drug-trafficking factions in metropolitan Rio de Janeiro \citep{fogocruzado2024}. The maps combine official gazettes, local press coverage, and triangulated incident reports on armed confrontation. Annual polygons cover 2007 to 2024. Appendix~\ref{app:measurement} documents treatment construction and validation. The measure captures the timing of \textit{de facto} territorial control as recorded by Fogo Cruzado. It is not an administrative or legal measure. Detection may be more systematic for militia territory, which often operates through visible service monopolies, than for drug-trafficking territory, which is more fluid and covert. We return to this asymmetry in the discussion because it implies that classical measurement error attenuates drug-trafficking estimates more than militia estimates, so a literal comparison of point estimates understates the militia-drug gap rather than overstating it.
 
-Electoral competition outcomes are constructed from polling-station-level returns published by Brazil's Superior Electoral Tribunal \citep{tse2024} for five municipal elections in 2008, 2012, 2016, 2020, and 2024. For each polling station, election, and office (\emph{prefeito} or \emph{vereador}), we compute the Herfindahl-Hirschman index of candidate vote shares (HHI), the effective number of candidates (ENC, following \citealt{laakso1979}), and the margin of victory between the first- and second-place candidates. We also obtain the number of eligible voters at each station-election from TSE, which we use as analytic weights and as a baseline demographic proxy.
+Electoral competition outcomes are constructed from polling-station-level returns published by Brazil's Superior Electoral Tribunal \citep{tse2024} for five municipal elections in 2008, 2012, 2016, 2020, and 2024. For each polling station, election, and office (\emph{prefeito} or \emph{vereador}), we compute the Herfindahl-Hirschman index of candidate vote shares (HHI) and the margin of victory between the first- and second-place candidates. We also report the effective number of candidates (ENC, following \citealt{laakso1979}). HHI and ENC are not independent outcomes: by the Laakso-Taagepera definition $\text{ENC}\equiv 1/\text{HHI}$, so any movement in HHI maps mechanically into a movement in ENC, and the two estimates carry the same information up to a non-linear monotone transformation. We report ENC alongside HHI because the two scales speak to different audiences: HHI is the natural concentration metric in the political-economy literature, while ENC translates the same variation into an interpretable count of effective candidates. We treat HHI as the primary concentration outcome and the margin of victory as a separate, non-redundant measure of competition. We also obtain the number of eligible voters at each station-election from TSE, which we use as analytic weights and as a baseline demographic proxy.
 
-The estimation sample is an unbalanced panel of 4,180 polling stations across five elections. Following \citet{monteiro2023enterprises}, we keep treated stations with a stable faction-type classification during the treated period. The sample contains 398 stations under militia control and 240 under drug-trafficking control. We exclude stations that switch between militia and drug control to isolate faction-specific mechanisms. The remaining 3,791 polling stations never fall inside a stable militia or drug-faction territory from 2007 to 2024 and form the never-treated pool. Treatment cohorts are defined by the first election year in which a station falls inside the faction's territory. Stations inside territory since the first map year in 2007 are assigned $g = 2008$. The staggered timing of entry provides the identifying variation.
+The geocoded master roster contains 4,180 polling stations across five elections. Following \citet{monteiro2023enterprises}, we classify treated stations by stable faction type during the treated period. The roster contains 401 stable militia stations, 246 stable drug-trafficking stations, 65 stations that switch between militia and drug-trafficking control, and 3,468 stations that never fall inside any annual faction territory from 2007 to 2024. The main treated estimation sample excludes switchers and requires valid electoral outcomes and eligible-voter weights. It contains 398 militia stations and 240 drug-trafficking stations in mayoral races. Treatment cohorts are defined by the first election year in which a station falls inside the faction's territory. Stations inside territory since the first map year in 2007 are assigned $g = 2008$. The staggered timing of entry provides the identifying variation.
 
-The outcomes capture different margins of electoral competition. HHI measures the concentration of vote shares across candidates and rises when votes concentrate on one candidate. ENC, the Laakso-Taagepera effective number of candidates, expresses the same distribution in units of equivalent competing candidates and falls when competition declines. The margin of victory rises when the winner's lead widens. These outcomes help distinguish mechanisms. Coercive mobilization toward a preferred candidate should raise HHI, lower ENC, and widen the margin. Candidate deterrence should lower ENC and widen the margin, with a less direct effect on HHI. Effects that move all three measures in the same direction are consistent with both channels operating through militia control.
+The outcomes capture different margins of electoral competition. HHI measures the concentration of vote shares across candidates and rises when votes concentrate on one candidate. ENC expresses the same distribution in units of equivalent competing candidates and is the reciprocal of HHI. The margin of victory rises when the winner's lead widens and carries information that is not deducible from HHI. These outcomes help distinguish channels. Coercive mobilization toward a preferred candidate should raise HHI and widen the margin. Candidate deterrence should widen the margin with a smaller direct effect on HHI. A common movement in HHI and the margin is consistent with both channels operating through militia control.
 
 \begin{table}[H]
 \centering
 \caption{Outcome Variables}\label{tab:outcomes}
 \begin{threeparttable}
-\small
-\begin{tabularx}{\textwidth}{@{}lXl@{}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.17\textwidth}@{}}
 \toprule
 Variable & Description & Source \\
 \midrule
-HHI                & Herfindahl-Hirschman index of candidate vote shares, $\sum_k s_k^2$, range $[0,1]$         & TSE \\[4pt]
-ENC                & Effective number of candidates, $1/\sum_k s_k^2$ \citep{laakso1979}                         & TSE \\[4pt]
-Margin of victory  & Vote share of first-place minus second-place candidate, range $[0,1]$                       & TSE \\
+\multicolumn{3}{@{}l}{\textit{Electoral competition}} \\
+HHI                & Herfindahl-Hirschman index of candidate vote shares, $\sum_k s_k^2$, range $[0,1]$. Primary concentration outcome. & TSE returns \\[2pt]
+ENC                & Effective number of candidates, $1/\sum_k s_k^2$ \citep{laakso1979}. Reciprocal of HHI; reported as an interpretable rescaling of the same variation. & TSE returns \\[2pt]
+Margin of victory  & Vote share of first-place minus second-place candidate, range $[0,1]$. Carries information not deducible from HHI. & TSE returns \\[2pt]
+\multicolumn{3}{@{}l}{\textit{Participation}} \\
+Turnout            & Total ballots cast, including blank and null ballots, divided by eligible voters. & TSE returns \\[3pt]
+\multicolumn{3}{@{}l}{\textit{Candidate selection}} \\
+Winning candidate vote share & Share of local valid votes cast for candidates who are elected to the office in the municipality. & TSE returns and candidate files \\[2pt]
+Competitive candidates at 1 pp & Number of candidates receiving at least one percent of local valid votes. & TSE returns \\[2pt]
+Top candidate vote share & Local valid-vote share of the highest-vote candidate at the polling station. & TSE returns \\[2pt]
+Top-3 candidates vote share & Combined local valid-vote share of the three highest-vote candidates at the polling station. & TSE returns \\[2pt]
+Public-admin occupation share & Share of local valid votes cast for candidates whose declared occupation is elected office or public administration. & TSE candidate files \\[3pt]
+\multicolumn{3}{@{}l}{\textit{Campaign finance}} \\
+Expenses, vote-weighted & Candidate total declared expenses multiplied by the candidate's local vote share and summed within the polling station. & TSE finance files; BCB/SGS \\[2pt]
+Revenue, vote-weighted & Candidate total declared campaign revenue multiplied by the candidate's local vote share and summed within the polling station. & TSE finance files; BCB/SGS \\[2pt]
+Expenses per vote & Vote-share-weighted candidate spending per vote, where candidate spending per vote is total declared expenses divided by the candidate's total votes. & TSE finance files; BCB/SGS \\[2pt]
+High-spending vote share & Share of local valid votes cast for candidates in the office-year top quartile of positive declared expenses. & TSE finance files \\
 \bottomrule
 \end{tabularx}
 \begin{tablenotes}\footnotesize
-\item \textit{Notes:} Each outcome is constructed separately for \emph{prefeito} (mayoral) and \emph{vereador} (city-council) races. Vote shares $s_k$ are computed on valid votes only, excluding blank and null ballots.
+\item \textit{Notes:} Outcomes are constructed separately for \emph{prefeito} (mayoral) and \emph{vereador} (city-council) races, except for turnout, which is a station-election participation measure. Vote shares $s_k$ are computed on valid votes only, excluding blank and null ballots. Monetary values are deflated to 2024 reais using IPCA from Banco Central do Brasil SGS series 433. Campaign-finance outcomes use candidate matches between TSE vote returns and TSE campaign-finance files.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-We exploit the staggered timing of faction territorial entry in a difference-in-differences framework. Let $G_i \in \{2008, 2012, 2016, 2020, 2024, \infty\}$ denote the first election year at which polling station $i$ falls inside a faction territory of a given type, with $G_i = \infty$ for never-treated stations. Treatment is effectively irreversible within our sample given the stable-classification restriction. Once a station enters militia or drug territory under the Monteiro et al.\ classification, it remains attributed to that faction throughout.
+We exploit the staggered timing of faction territorial entry in a difference-in-differences framework. Let $G_i \in \{2008, 2012, 2016, 2020, 2024, \infty\}$ denote the first election year at which polling station $i$ falls inside a faction territory of a given type, with $G_i = \infty$ for never-treated stations. We restrict the estimation sample to stations with stable faction classification, so treatment is irreversible \emph{by construction} in this sample. Excluded switchers (40 drug $\rightarrow$ militia and 25 militia $\rightarrow$ drug, 9.1\% of ever-treated stations) experience two treatment events and are dropped to keep the within-faction-type ATT well defined. The exclusion narrows external validity to areas of stable faction control rather than contested boundaries.
 
 The design estimates group-time average treatment effects on the treated,
 \begin{equation}\label{eq:att_gt}
@@ -144,64 +161,35 @@ The identifying assumption is conditional parallel trends. Conditional on pre-tr
 \end{equation}
 for all $t \geq g$. In the main specification we set $\mathbf{X}_i = \emptyset$, imposing unconditional parallel trends within each faction-type pool. Conditioning is tightly constrained by the polling-station level of analysis. Stations are administrative units rather than survey units, and routinely observed station-level covariates are limited to the number of eligible voters used as weights, the parent municipality, and the station's own voting record.
 
-Faction territorial entry may be endogenous to polling-station electoral dynamics. Armed groups may expand into neighborhoods where a politically aligned candidate is vulnerable, or where support for that candidate is already consolidating. The reverse-causality channel documented by \citet{pantaleao2025elections}, in which elected officials protect militia expansion, is a direct concern. A second concern is geographic contagion. Militia expansion often follows existing territorial boundaries that correlate with persistent features of the Rio metropolitan map, including the West Zone and the Baixada Fluminense. A third concern is the 2020 cohort, which overlaps with the COVID-19 shock to campaigns and turnout.
+Faction territorial entry may be endogenous to polling-station electoral dynamics. Armed groups may expand into neighborhoods where a politically aligned candidate is vulnerable, or where support for that candidate is already consolidating. The reverse-causality channel documented by \citet{pantaleao2025elections}, in which elected officials protect militia expansion, is a direct concern. A second concern is geographic contagion. Militia expansion often follows existing territorial boundaries that correlate with persistent features of the Rio metropolitan map, including the West Zone and the Baixada Fluminense. A third concern is the 2020 cohort, which overlaps with the COVID-19 shock to campaigns and turnout. Together these threats mean we cannot read the design as a clean randomized experiment, and we adopt a moderated empirical claim throughout: estimates are reported as conditional differences between entering and not-yet-entering militia stations of the same faction type, not as exogenous treatment effects.
 
-The rollout of Rio's Pacifying Police Units (UPPs) from 2008 to 2014 helps with the first concern. UPPs occupied 38 favelas and displaced incumbent drug factions. Their rollout followed logistical and political criteria tied to the 2014 World Cup and 2016 Olympics, rather than station-level electoral dynamics \citep{ferraz2023upp, magaloni2020killing}. The criminal-governance literature indicates that militias expanded into territorial vacuums created by drug-faction displacement from UPPs and later state crackdowns \citep{pantaleao2025elections, monteiro2023enterprises}. If the militia-entry cohorts from 2012 to 2020 partly reflect these state-induced displacement shocks, the timing is not driven only by local political conditions. The estimates should be read as effects of militia territorial entry conditional on this state-policy component of entry timing.
+Rio's Pacifying Police Units (UPPs), rolled out from 2008 to 2014, weaken the concern that militia entry simply tracks station-level electoral dynamics. UPPs occupied 38 favelas and displaced incumbent drug-trafficking factions. Their rollout followed logistical and political criteria tied to the 2014 World Cup and 2016 Olympics, rather than station-level electoral dynamics \citep{ferraz2023upp, magaloni2020killing}. The criminal-governance literature indicates that militias expanded into territorial vacuums created by drug-trafficking-faction displacement from UPPs and later state crackdowns \citep{pantaleao2025elections, monteiro2023enterprises}. If the militia-entry cohorts from 2012 to 2020 partly reflect these state-induced displacement shocks, the timing is not driven only by local political conditions. We do not formalize this argument as an instrumental-variables strategy and read the estimates as effects of militia territorial entry conditional on the state-policy component of entry timing rather than as a sharp causal identification.
 
-The within-faction-type NYT comparison restricts the counterfactual to stations drawn from the same institutional mechanism. This removes selection into faction type. It also helps with geographic contagion because treated and not-yet-treated stations come from the same expansion process. Event-study inspection addresses the COVID concern. If the 2020 cohort drove the aggregate effect, the path would show a discontinuity at $e=0$ driven by post-2020 cells. Section~\ref{sec:results} shows a more stable dynamic pattern.
+The within-faction-type NYT comparison gives treated stations a counterfactual drawn from the same institutional mechanism. It removes selection into faction type and reduces concerns about geographic contagion, since treated and not-yet-treated stations come from the same expansion process. Event-study paths address the COVID concern. If the 2020 cohort drove the aggregate estimates, the path would show a discontinuity at $e=0$ driven by post-2020 cells. The event-study paths below are more stable.
 
-The preferred specification uses not-yet-treated (NYT) controls of the same faction type. For a militia-treated station in cohort $g$, controls are militia-classified stations with $G_i > t$. The drug-faction design is analogous. These controls come from the same institutional mechanism as treated units, so the comparison isolates timing from faction-type selection. The alternative never-treated (NT) pool contains 3,791 stations outside stable militia and drug-faction territory. It is cleaner as an unexposed benchmark but differs from treated stations on preexisting political trajectories. NT and NYT identify different estimands under different parallel-trend assumptions. We use NYT in the main text and report NT estimates in Appendix~\ref{app:nt}.
+NYT controls of the same faction type are the preferred comparison group. For a militia-treated station in cohort $g$, controls are militia-classified stations with $G_i > t$. The drug-trafficking-faction design is analogous. These controls come from the same institutional mechanism as treated units, so the comparison isolates timing from faction-type selection. Appendix~\ref{app:nt} reports a broader outside-stable-treatment benchmark. In mayoral races, that benchmark uses 3,791 valid polling stations that are not in the stable militia or stable drug-trafficking treated samples. It differs from the 3,468 true never-treated stations in the geocoded roster because it is defined on the electoral panel and excludes only stable treated units. We use NYT in the main text.
 
-Because treatment is defined on annual territory maps while elections occur every four years, the first post-treatment observation may reflect only partial within-cycle exposure for stations that entered territory late in the four-year cycle. If militia territory expanded to include a station in 2018, that station's first post-treatment election is 2020, with only two years of exposure. This feature tends to attenuate short-run effects. The observed ATT at $e = 0$ is a lower bound on the fully exposed effect.
+Because treatment is defined on annual territory maps while elections occur every four years, the first post-treatment observation may reflect only partial within-cycle exposure for stations that entered territory late in the four-year cycle. If militia territory expanded to include a station in 2018, that station's first post-treatment election is 2020, with only two years of exposure. This feature may attenuate short-run estimates. The event-time-zero estimate should therefore be interpreted as a partial-exposure estimate rather than as the effect of a full municipal cycle under faction control.
 
-For the dynamic analysis, event time is measured in elections relative to cohort entry. The universal base period is $e = -1$, so coefficients are deviations from the election immediately before treatment. We summarize dynamics using the aggregation in \citet{callaway2021did}. It averages $ATT(g,t)$ cells by event time $e$ and then averages the post-treatment path with weights proportional to the number of cohorts that reach each horizon. Figures show $e \in \{-12, -8, -4, 0, +4\}$ years relative to cohort entry. Standard errors are clustered at the polling-station level using the influence-function multiplier bootstrap in the \texttt{did} R package. Appendix~\ref{app:clustering} reports sensitivity to broader territory-polygon and municipality clusters. Pre-trends are assessed with a joint Wald test on all event-study coefficients for $e < 0$.
+Dynamic specifications measure event time in elections relative to cohort entry. The universal base period is $e = -1$, so coefficients are deviations from the election immediately before treatment. Cohorts first observed as treated in 2008 have no pre-treatment municipal election in the panel. They are included in treated-station counts, but they do not contribute to $ATT(g,t)$ cells that require the universal pre-treatment base period. We summarize dynamics using the aggregation in \citet{callaway2021did}. It averages $ATT(g,t)$ cells by event time $e$ and then averages the post-treatment path with weights proportional to the number of cohorts that reach each horizon. The figures report $e \in \{-12, -8, -4, 0, +4\}$ years relative to cohort entry. Standard errors are clustered at the polling-station level using the influence-function multiplier bootstrap in the \texttt{did} R package. Pre-trends are assessed with a joint Wald test on all event-study coefficients for $e < 0$.
 
 %==========================================================================
 \section{Results}\label{sec:results}
 %==========================================================================
 
-Pre-treatment outcomes differ sharply by office. In mayoral races, pre-treatment militia stations have an average HHI of 0.350, an effective number of candidates of 3.43, a margin of victory of 0.21, and turnout of 0.52. Drug-treated and never-treated stations are broadly similar on these dimensions. In city-council races, open-list proportional representation produces a much less concentrated vote distribution. ENC averages around 30 candidates, while HHI and the margin of victory are much smaller than in mayoral races. These baselines calibrate the treatment effects below.
+Pre-treatment competition outcomes differ sharply by office. In mayoral races, pre-treatment militia stations have an average HHI of 0.350, an effective number of candidates of 3.43, a margin of victory of 0.21, and turnout of 0.52. Drug-treated and broad-control stations are broadly similar on these dimensions. In city-council races, open-list proportional representation produces a much less concentrated vote distribution. ENC averages around 30 candidates, while HHI and the margin of victory are much smaller than in mayoral races. Table~\ref{tab:sumstats} also reports the mechanism baselines used below: candidate-selection outcomes, campaign-finance outcomes in 2024 reais, and high-spending vote shares. These baselines calibrate the treatment effects below.
 
-\begin{table}[H]
-\centering
-\caption{Descriptive Statistics: Pre-Treatment Baselines}\label{tab:sumstats}
-\footnotesize
-\begin{tabular}{@{}l ccc@{}}
-\toprule
- & Never-treated & Militia (pre) & Drug (pre) \\
-\midrule
-\multicolumn{4}{@{}l}{\textit{Panel A: Prefeito (mayoral) races}} \\[2pt]
-HHI                 & 0.374 & 0.350 & 0.384 \\
-                    & (0.151) & (0.153) & (0.119) \\
-ENC                 & 3.151 & 3.428 & 2.913 \\
-                    & (1.303) & (1.376) & (1.057) \\
-Margin of victory   & 0.239 & 0.207 & 0.193 \\
-                    & (0.197) & (0.185) & (0.154) \\
-Turnout             & 0.552 & 0.523 & 0.569 \\
-                    & (0.197) & (0.197) & (0.205) \\[4pt]
-\multicolumn{4}{@{}l}{\textit{Panel B: Vereador (city-council) races}} \\[2pt]
-HHI                 & 0.047 & 0.048 & 0.045 \\
-                    & (0.047) & (0.046) & (0.029) \\
-ENC                 & 34.98 & 32.17 & 29.84 \\
-                    & (21.04) & (18.79) & (15.01) \\
-Margin of victory   & 0.061 & 0.069 & 0.049 \\
-                    & (0.080) & (0.089) & (0.055) \\
-\midrule
-$N$ polling stations & 3{,}791 & 196 & 70 \\
-\bottomrule
-\end{tabular}
-\tabnotes{\textit{Notes:} Means and standard deviations (in parentheses) of outcome variables, computed over the pre-treatment observations of each group. For militia and drug-treated stations, the pre-treatment sample restricts to station-election observations with $t < G_i$ (before the first year the station enters faction territory). For never-treated stations, all five elections are included. Station counts exclude stations whose first cohort is $g = 2008$ (no pre-treatment observations available); the reported $N$ for never-treated stations is the Prefeito count, with one station dropping out of the Vereador panel for non-missing outcome reasons. Outcomes are defined in Table~\ref{tab:outcomes}. Source: TSE electoral returns and Fogo Cruzado annual territory maps.}
-\end{table}
+\input{tables/tab83_sumstats_baseline.tex}
 
 \subsection{Mayoral Competition}\label{sec:prefeito_results}
 
-Militia territorial expansion reduces competition in mayoral races. Under the preferred NYT specification in Table~\ref{tab:csdid_main}, vote concentration rises by 0.039, the effective number of candidates falls by 0.347, the margin of victory widens by 5.2 percentage points, and turnout rises by 1.8 percentage points. All four estimates are significant at the one percent level and pass the joint Wald pre-trends test.\footnote{We also apply the relative-magnitude sensitivity framework of \citet{rambachan2023honest}. The three militia and \emph{prefeito} competition effects remain robust to plausible post-treatment deviations from parallel trends. Appendix~\ref{app:honestdid} reports the full sensitivity tables, robust confidence sets, and breakdown values $\overline{M}$.} The event-study paths in Figure~\ref{fig:es_main} show flat pre-treatment coefficients and post-treatment effects that appear at the treatment election and persist through the next cycle. Drug-faction expansion does not produce detectable changes in mayoral competition under the same design.
+Militia territorial entry is associated with lower competition in mayoral races. Under the preferred NYT specification in Table~\ref{tab:csdid_main}, vote concentration (HHI) rises by 0.039 and the margin of victory widens by 5.2 percentage points; ENC falls by 0.347, the arithmetic translation of the HHI movement. Turnout rises by 1.8 percentage points. All estimates are statistically significant at the one percent level and pass the joint Wald pre-trends test.\footnote{We also apply the relative-magnitude sensitivity framework of \citet{rambachan2023honest}. The militia and \emph{prefeito} outcome estimates remain robust to plausible post-treatment deviations from parallel trends. Appendix~\ref{app:honestdid} reports the full sensitivity tables, robust confidence sets, and breakdown values $\overline{M}$.} Event-study estimates have flat pre-treatment coefficients and post-treatment estimates that appear at the treatment election. We address the dynamics in detail below: HHI and ENC attenuate by approximately one-half by the next cycle, while the margin-of-victory estimate is essentially stable. Drug-trafficking faction expansion does not produce detectable estimates on mayoral competition under the same design.
 
-Appendix~\ref{app:mde} formalizes the militia-drug contrast. Equality tests reject equal effects for all three mayoral competition outcomes ($p = 0.011$ for HHI, $p = 0.008$ for ENC, and $p = 0.032$ for margin of victory). Power remains limited in the smaller drug-faction sample. At 80\% power, the design can detect drug-faction effects of 0.039 HHI points, 0.401 effective candidates, and 5.6 percentage points in the margin of victory. We read the drug estimates as evidence that the design does not detect comparable electoral compression for drug factions. They do not prove that drug factions have no electoral influence in any context.
+Appendix~\ref{app:mde} formalizes this contrast. Equality tests reject equal militia and drug-trafficking-faction estimates for HHI, ENC, and the margin of victory in mayoral races. Because $\text{ENC}\equiv 1/\text{HHI}$, the HHI and ENC equality tests are not independent pieces of evidence; they are the same test reported on two scales. The corresponding drug-trafficking-faction minimum detectable effects at 80 percent power are 0.036 HHI points, 0.384 effective candidates, and 5.6 percentage points in the margin. We read the drug-trafficking estimates as evidence that the design does not detect comparable electoral compression for drug-trafficking factions in metropolitan Rio over this window. They do not establish a general absence of electoral influence.
 
-The estimates are large relative to pre-treatment militia baselines. The HHI coefficient of $+$0.039 is about 11 percent of the baseline of 0.350. The ENC coefficient of $-$0.347 is about a 10 percent reduction relative to 3.43 effective candidates. The margin coefficient of $+$0.052 widens the baseline margin by about 25 percent. The turnout coefficient of $+$0.018 is a 3.4 percent increase relative to a baseline of 0.52. Militia entry shifts mayoral outcomes within one election cycle, and the dynamic estimates show persistence into the next cycle.
+The estimates are meaningful relative to pre-treatment militia baselines. The HHI coefficient of $+$0.039 is about 11 percent of the baseline of 0.350; the equivalent ENC coefficient of $-$0.347 is the same movement on the reciprocal scale, about a 10 percent change relative to 3.43 effective candidates. The margin coefficient of $+$0.052 widens the baseline margin by about 25 percent. The turnout coefficient of $+$0.018 is a 3.4 percent increase relative to a baseline of 0.52. Militia entry shifts mayoral outcomes within one election cycle. The dynamic decomposition below shows that the largest concentration estimates appear at entry and partly fade by the next cycle, while the margin estimate remains roughly stable.
 
-Turnout helps distinguish mobilization from suppression. Militia control could compress competition by bringing additional voters to the polls and directing them toward allied candidates. It could also work by keeping opposition supporters home while the militia-aligned base votes. Both channels can raise HHI and widen the margin, but they imply opposite turnout effects. The positive turnout estimate supports the mobilization interpretation. It also connects the result to work showing that exposure to armed-group violence can raise political participation through expressive or psychological channels \citep{blattman2009voting}.
+Turnout helps separate mobilization from suppression. Higher militia turnout combined with higher concentration and a wider margin is consistent with either mobilization toward a single candidate or selective demobilization that leaves the militia-aligned base relatively over-represented; it is harder to reconcile with broad suppression of all voters. In machine-politics models, rewards often buy turnout because participation is easier to monitor than vote choice \citep{nichter2008turnout}, and brokers can target voters using local knowledge and reciprocal obligations even under the secret ballot \citep{finan2012reciprocity}. The combined pattern leans toward a mobilization channel, but our station-level estimates do not separately identify individual-level vote choice.
 
 \begin{table}[H]
 \centering
@@ -218,41 +206,122 @@ Inside territory & $+$0.039$^{***}$ & $-$0.347$^{***}$ & $+$0.052$^{***}$ & $+$0
 Wald $p$         & [0.210] & [0.211] & [0.314] & [0.362] & [0.448] & [0.208] & [0.976] & [0.146] \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory, using the not-yet-treated control group of the same faction type. Outcomes are measured on \emph{prefeito} mayoral races; turnout, defined at the station-election level as total votes including blank and null divided by eligible voters, does not vary between mayoral and city-council ballots. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Universal base period, observations weighted by eligible voters, unbalanced panel. Appendix~\ref{app:nt} reports the corresponding never-treated specification as a complementary benchmark. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory, using the not-yet-treated control group of the same faction type. Outcomes are measured on \emph{prefeito} mayoral races. Turnout is a station-election participation measure, defined as total votes including blank and null divided by eligible voters. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Universal base period, observations weighted by eligible voters, unbalanced panel. Appendix~\ref{app:nt} reports the broad-control specification as a complementary benchmark. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.88\textwidth}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_prefeito_hhi.pdf}
 \caption{HHI}
 \end{subfigure}
-
-\vspace{0.3em}
-\begin{subfigure}[b]{0.88\textwidth}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_prefeito_enc.pdf}
 \caption{ENC}
 \end{subfigure}
 
-\vspace{0.3em}
-\begin{subfigure}[b]{0.88\textwidth}
+\vspace{0.5em}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_prefeito_margin_victory.pdf}
 \caption{Margin of Victory}
 \end{subfigure}
-\caption{Event-Study: Militia Expansion on Prefeito Competition}\label{fig:es_main}
-\tabnotes{\textit{Notes:} Dynamic $ATT(g,t)$ paths for militia and \emph{prefeito} from \citet{callaway2021did} estimator with not-yet-treated control of the same faction type. Horizontal axis is elections relative to a station's treatment year, with $0$ denoting the election in which the station first falls inside militia territory. Open circle at $-1$ is the reference period one election before treatment. Black dots with error bars show 95\% confidence intervals. Universal base period, dynamic aggregation over $e \in [-12, 4]$.}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig79_es_militia_raw_prefeito_turnout.pdf}
+\caption{Turnout}
+\end{subfigure}
+\caption{Event-Study: Militia Expansion on Prefeito Outcomes}\label{fig:es_main}
+\tabnotes{\textit{Notes:} Dynamic $ATT(g,t)$ paths for militia and \emph{prefeito} from \citet{callaway2021did} estimator with not-yet-treated control of the same faction type. Horizontal axis is elections relative to a station's treatment year, with $0$ denoting the election in which the station first falls inside militia territory. Open circle at $-1$ is the reference period one election before treatment. Black dots with error bars show 95\% confidence intervals. Turnout is total ballots divided by eligible voters. Universal base period, dynamic aggregation over $e \in [-12, 4]$.}
 \end{figure}
 
-\subsection{City-Council Competition}\label{sec:vereador_results}
+\subsection{Mayoral Mechanisms}\label{sec:mechanism_results}
 
-City-council races show a different pattern. Under the preferred NYT specification in Table~\ref{tab:csdid_vereador}, none of the three competition measures moves significantly for either faction type. The militia estimates for HHI ($+0.001$), ENC ($-0.072$), and the margin of victory ($+0.003$) are small relative to both their baselines and the mayoral estimates. Relative to militia city-council baselines, they imply a 3.1 percent rise in HHI, a 0.2 percent decline in effective candidates, and a 3.9 percent wider margin. The corresponding mayoral effects are 11 percent, 10 percent, and 25 percent. Drug-faction estimates are also small and insignificant. The NYT pre-trends tests do not reject, so the null is not driven by an evident failure of the within-faction-type design.
+The turnout estimate is more informative when decomposed by vote type. Table~\ref{tab:turnout_decomp} shows that militia expansion raises valid votes for the within-station leading candidate by 0.0265 per eligible voter, while valid votes for all other candidates fall by 0.0101. Blank and null votes do not change detectably. The same decomposition shows no comparable drug-trafficking-faction pattern. The within-station leader is defined \emph{ex post} as the candidate with the highest valid-vote share in the polling-station race, so a finding that ``additional turnout goes to the local leader'' is partly arithmetic: any concentration of new votes on a single candidate makes that candidate the leader. We therefore frame the decomposition as a description of the shape of additional turnout (concentrated on one within-station candidate rather than spread across the field), not as direct evidence that the additional voters chose a militia-allied politician. The mechanism table immediately below uses an \emph{ex ante} definition---the candidate who is ultimately elected to the mayoral race in the municipality---which is the cleaner test of whether votes shift toward an aligned candidate.
 
 \begin{table}[H]
 \centering
-\caption{CS-DID: City-Council (\emph{Vereador}) Competition Outcomes}\label{tab:csdid_vereador}
+\caption{Turnout Decomposition in Mayoral Races}\label{tab:turnout_decomp}
+\footnotesize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & \textbf{Militia} & \textbf{Drug Factions} \\
+\midrule
+Total turnout                  & $+$0.018$^{***}$ & $+$0.008 \\
+                               & (0.006)          & (0.018) \\
+Local leader valid votes        & $+$0.027$^{***}$ & $-$0.001 \\
+                               & (0.006)          & (0.013) \\
+Other-candidate valid votes     & $-$0.010$^{***}$ & $+$0.005 \\
+                               & (0.004)          & (0.007) \\
+Blank and null votes            & $+$0.001         & $+$0.004 \\
+                               & (0.001)          & (0.004) \\
+Residual reported turnout       & $+$0.000         & $+$0.000 \\
+                               & (0.000)          & (0.001) \\
+\bottomrule
+\end{tabular}
+\tabnotes{\textit{Notes:} Preferred not-yet-treated CS-DID estimates for \emph{prefeito} races. Each outcome is measured per eligible voter. Local leader valid votes are valid votes for the candidate with the highest valid-vote share in the polling station. Other-candidate valid votes aggregate all remaining candidates. The residual row is an accounting term equal to total votes minus valid votes and blank-null votes, divided by eligible voters. It is concentrated in 2008 and is included so the decomposition sums to total turnout. Standard errors in parentheses clustered at the polling-station level through the \texttt{did} influence-function bootstrap. $N=398$ militia-treated polling stations and $N=240$ drug-trafficking-faction-treated polling stations. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\end{table}
+
+Exposure-duration estimates separate effects at entry from effects four years later. Table~\ref{tab:duration} reports the dynamic estimates at $e=0$ and $e=+4$ alongside the difference. The pattern is one of \emph{partial attenuation}, not stable persistence. The HHI estimate falls from $+0.079$ at entry to $+0.039$ one cycle later, and the ENC estimate moves from $-0.701$ to $-0.347$; both differences are statistically significant and reflect the same underlying movement (HHI and ENC are reciprocals). The margin-of-victory estimate is essentially unchanged across cycles ($+0.078$ vs.\ $+0.077$). The turnout estimate is concentrated in the entry election ($+0.061$) and is statistically indistinguishable from zero one cycle later ($-0.008$); the change is significant. The dynamically aggregated ATT in Table~\ref{tab:csdid_main} averages these horizons, so for HHI, ENC, and turnout it understates the entry-election effect and overstates the one-cycle-later effect.
+
+This pattern is consistent with rapid vote concentration at entry that partially fades as the political situation settles, with a more durable effect on the winning margin and a one-shot effect on participation. Two interpretations are compatible with the data: militia-driven coordination at entry that no longer requires sustained mobilization once a preferred candidate is established; or cohort heterogeneity, with later cohorts reaching $e=+4$ contributing relatively smaller estimates. We do not separately identify the two channels here. We avoid describing the effects as ``persistent'' below; the more accurate characterization is ``present at entry and attenuating, except for the margin of victory.''
+
+\begin{table}[H]
+\centering
+\caption{Exposure Duration in Mayoral Races}\label{tab:duration}
+\footnotesize
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Faction & Outcome & Entry election & One cycle later & Later minus entry \\
+\midrule
+Militia & HHI               & $+$0.079$^{***}$ & $+$0.039$^{***}$ & $-$0.040$^{**}$ \\
+        &                   & (0.021)          & (0.011)          & (0.018) \\
+        & ENC               & $-$0.701$^{***}$ & $-$0.340$^{***}$ & $+$0.362$^{**}$ \\
+        &                   & (0.167)          & (0.113)          & (0.179) \\
+        & Margin of victory & $+$0.078$^{***}$ & $+$0.077$^{***}$ & $-$0.001 \\
+        &                   & (0.023)          & (0.022)          & (0.023) \\
+        & Turnout           & $+$0.061$^{***}$ & $-$0.008         & $-$0.069$^{***}$ \\
+        &                   & (0.016)          & (0.010)          & (0.016) \\
+\midrule
+Drug    & HHI               & $-$0.001         & $-$0.008         & $-$0.007 \\
+        &                   & (0.030)          & (0.018)          & (0.029) \\
+        & ENC               & $+$0.093         & $+$0.140         & $+$0.047 \\
+        &                   & (0.359)          & (0.191)          & (0.330) \\
+        & Margin of victory & $+$0.013         & $-$0.007         & $-$0.020 \\
+        &                   & (0.044)          & (0.029)          & (0.044) \\
+        & Turnout           & $+$0.041         & $-$0.016         & $-$0.056$^{*}$ \\
+        &                   & (0.038)          & (0.025)          & (0.030) \\
+\bottomrule
+\end{tabular}
+\tabnotes{\textit{Notes:} Preferred not-yet-treated CS-DID event-study estimates for \emph{prefeito} races. Entry election is event time $e=0$. One cycle later is event time $e=+4$ years. The final column reports the difference between the two dynamic effects, computed from the dynamic aggregation influence functions. Standard errors in parentheses. $N=398$ militia-treated polling stations and $N=240$ drug-trafficking-faction-treated polling stations. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\end{table}
+
+Candidate-level and campaign-finance mechanisms point in the same direction. This is the margin on which the organized-crime and machine-politics literatures would expect territorial control to appear. Armed groups can exchange protection, coercion, or market access for political support \citep{dalbo2006plata, defeo2017mafia, acemoglu2013monopoly, alesina2019organized}. In Rio, the same logic is especially plausible for militias because their economic rents depend on state tolerance and local regulatory decisions \citep{monteiro2023enterprises, pantaleao2025elections}, and recent evidence shows that criminal governance can shape elections through candidate gatekeeping and voter corralling \citep{trudeau2025criminal}. The turnout estimate also fits a brokered-mobilization channel: clientelistic brokers often buy or pressure turnout because participation is easier to monitor than vote choice, while local networks help target voters despite the secret ballot \citep{nichter2008turnout, finan2012reciprocity}.
+
+Table~\ref{tab:mechanisms_prefeito} shows that militia entry is associated with a higher share of votes for candidates who ultimately win the mayoral race, a higher vote share for the locally top candidate and the top three candidates, a lower number of candidates with at least one percentage point of local votes, and a higher share of votes for candidates whose declared occupation is elected office or public administration. Votes also shift toward candidates with larger real campaign expenses and revenues, measured in 2024 reais. At the same time, real vote-weighted expenses per vote fall. Two interpretations of this last estimate are compatible with the data, and the design does not separate them. The first is a productivity reading: territorial assistance makes a real spent on the supported candidate go further, so the cost of producing a vote declines. The second is a compositional reading: militia entry raises the vote share of front-runners (also captured by the top-candidate and elected-share estimates) and front-runners mechanically have more votes per real of declared expense than fringe candidates, so the average expense-per-vote drops without any change in fundamental productivity. We report the negative expense-per-vote estimate as descriptive evidence of where votes shift along the spending distribution and avoid claiming a productivity effect on its own. Drug-trafficking-faction estimates are weaker and mostly indistinguishable from zero, consistent with confrontational criminal governance having weaker access to the political-protection channel.
+
+\input{tables/tab95_mechanisms_prefeito.tex}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig95_mechanisms_prefeito.pdf}
+\caption{Mechanism Estimates in Mayoral Races}\label{fig:mechanisms_prefeito}
+\tabnotes{\textit{Notes:} Preferred not-yet-treated CS-DID estimates for \emph{prefeito} races. Points are dynamically aggregated ATTs and horizontal bars are 95\% confidence intervals. Panel A reports candidate-selection outcomes. Panel B reports campaign-finance outcomes matched to candidate votes; monetary values are deflated to 2024 reais using IPCA from BCB/SGS series 433. All estimates use eligible-voter weights and the same faction-type-specific not-yet-treated control group as Table~\ref{tab:csdid_main}.}
+\end{figure}
+
+\subsection{City-Council Competition and Mechanisms}\label{sec:vereador_results}
+
+City-council races do not show the same compression. Under the preferred NYT specification in Table~\ref{tab:csdid_vereador}, none of the three office-specific competition measures moves significantly for either faction type. The militia estimates for HHI ($+0.001$), ENC ($-0.072$, the reciprocal-scale equivalent), and the margin of victory ($+0.003$) are small relative to their baselines and to the mayoral estimates. Relative to militia city-council baselines, they imply a 3.1 percent rise in HHI and a 3.9 percent wider margin. The corresponding mayoral estimates are 11 percent and 25 percent. Drug-trafficking-faction estimates are also small and insignificant. The NYT pre-trends tests do not reject, so the null is not driven by an evident failure of the within-faction-type design.
+
+The office contrast is consistent with Brazil's electoral institutions. Mayoral races are single-seat executive contests, so an armed group can concentrate support on one candidate and, if successful, obtain access to appointments, contracts, inspection priorities, and other municipal levers that matter for illicit and informal markets \citep{ferraz2011electoral, monteiro2023enterprises}. City-council races are open-list proportional contests with many viable candidates and strong personal-vote incentives \citep{carey1995personal, novaes2018brokers}. In that setting, brokers can deliver modular vote blocs to individual politicians without generating visible aggregate compression in the station-level candidate distribution. We use this institutional contrast as the organizing logic for the rest of the paper rather than re-stating it in the discussion section.
+
+\begin{table}[H]
+\centering
+\caption{CS-DID: City-Council (\emph{Vereador}) Outcomes}\label{tab:csdid_vereador}
 \footnotesize
 \begin{tabular}{@{}l ccc ccc@{}}
 \toprule
@@ -261,67 +330,73 @@ City-council races show a different pattern. Under the preferred NYT specificati
  & HHI & ENC & Margin & HHI & ENC & Margin \\
 \midrule
 Inside territory & $+$0.001 & $-$0.072 & $+$0.003 & $+$0.001 & $-$0.509 & $+$0.005 \\
-                 & (0.003)  & (0.827)  & (0.008)  & (0.002)  & (1.053)  & (0.005)  \\
-Wald $p$         & [0.734]  & [0.093]  & [0.430]  & [0.267]  & [0.902]  & [0.316]  \\
+                 & (0.003)  & (0.827)  & (0.008)  & (0.002)  & (1.053)  & (0.005) \\
+Wald $p$         & [0.734]  & [0.093]  & [0.430]  & [0.267]  & [0.902]  & [0.316] \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory, using the not-yet-treated control group of the same faction type. Raw outcomes on \emph{vereador} city-council races. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Universal base period, observations weighted by eligible voters, unbalanced panel. Appendix~\ref{app:nt} reports the corresponding never-treated specification. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory, using the not-yet-treated control group of the same faction type. HHI, ENC, and margin are raw outcomes on \emph{vereador} city-council races. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Universal base period, observations weighted by eligible voters, unbalanced panel. Appendix~\ref{app:nt} reports the broad-control specification. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
 \end{table}
 
-The dynamic paths in Figure~\ref{fig:es_vereador} are flat before and after treatment. The same polling stations that show compression in mayoral competition after entering militia territory show little movement in city-council competition. The confidence intervals rule out effects comparable to the mayoral result at conventional levels.
+Event-study estimates give the same result. The same polling stations that show compression in mayoral competition after entering militia territory show little movement in city-council competition. At conventional levels, the confidence intervals rule out effects comparable to the mayoral result.
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.88\textwidth}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_vereador_hhi.pdf}
 \caption{HHI}
 \end{subfigure}
-
-\vspace{0.3em}
-\begin{subfigure}[b]{0.88\textwidth}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_vereador_enc.pdf}
 \caption{ENC}
 \end{subfigure}
 
-\vspace{0.3em}
-\begin{subfigure}[b]{0.88\textwidth}
+\vspace{0.5em}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig79_es_militia_raw_vereador_margin_victory.pdf}
 \caption{Margin of Victory}
 \end{subfigure}
-\caption{Event-Study: Militia Expansion on Vereador Competition}\label{fig:es_vereador}
+\caption{Event-Study: Militia Expansion on Vereador Outcomes}\label{fig:es_vereador}
 \tabnotes{\textit{Notes:} Dynamic $ATT(g,t)$ paths for militia and \emph{vereador} from \citet{callaway2021did} estimator with not-yet-treated control of the same faction type. Horizontal axis is elections relative to a station's treatment year, with $0$ denoting the election in which the station first falls inside militia territory. Open circle at $-1$ is the reference period one election before treatment. Black dots with error bars show 95\% confidence intervals. Universal base period, dynamic aggregation over $e \in [-12, 4]$.}
 \end{figure}
 
-The office-level contrast is consistent with the payoff to coordination. Mayoral contests are single-seat elections. An armed group can concentrate support on one candidate and, if successful, gain access to the top of the municipal executive. City-council races allocate many seats under open-list proportional representation. Concentrated support at one polling station has a smaller effect on the aggregate seat allocation. The institutional return to coercive mobilization is higher in mayoral races.
+The broader mechanism table for city-council races is consistent with the office contrast. Table~\ref{tab:mechanisms_vereador} and Figure~\ref{fig:mechanisms_vereador} show no comparable shift toward winning or locally dominant candidates. Campaign-finance estimates are smaller than in mayoral races. Militia entry raises the vote share of high-spending council candidates, but real vote-weighted expenses and revenues do not move detectably and the estimates do not translate into aggregate competition compression. Drug-trafficking-faction estimates remain weak. The high-spending vote-share estimate for council races reads as a narrower candidate-level allocation pattern, not as evidence of broader capture of the council race.
+
+\input{tables/tab95_mechanisms_vereador.tex}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig95_mechanisms_vereador.pdf}
+\caption{Mechanism Estimates in City-Council Races}\label{fig:mechanisms_vereador}
+\tabnotes{\textit{Notes:} Preferred not-yet-treated CS-DID estimates for \emph{vereador} races. Points are dynamically aggregated ATTs and horizontal bars are 95\% confidence intervals. Panel A reports candidate-selection outcomes. Panel B reports campaign-finance outcomes matched to candidate votes; monetary values are deflated to 2024 reais using IPCA from BCB/SGS series 433. All estimates use eligible-voter weights and the same faction-type-specific not-yet-treated control group as Table~\ref{tab:csdid_vereador}.}
+\end{figure}
 
 %==========================================================================
 \section{Discussion}\label{sec:discussion}
 %==========================================================================
 
-Militia territorial expansion compresses mayoral competition on all three measures. Relative to pre-treatment militia baselines, the estimates imply an 11 percent rise in HHI, a 10 percent reduction in effective candidates, and a 25 percent wider margin of victory. The turnout result speaks to the mechanism. Vote concentration rises together with participation, which points toward coerced mobilization for allied candidates rather than turnout suppression.
+Militia territorial entry is associated with lower mayoral competition along the concentration and margin-of-victory dimensions. Relative to pre-treatment militia baselines, HHI rises by 11 percent and the margin widens by 25 percent; the corresponding ENC change is the same movement on the reciprocal scale. Turnout also rises. The combination points away from pure turnout suppression and is more consistent with mobilization or coerced turnout that benefits a single candidate, although our station-level estimates do not separately identify individual vote choice. The mechanism estimates sharpen this reading: militia entry shifts votes toward eventual winners, locally top candidates, and candidates with larger declared campaign budgets. The estimated drop in vote-weighted expense per vote is consistent with either a productivity gain from territorial assistance or a compositional shift toward front-runners who already have low expense per vote; the two are not separately identified here.
 
-This pattern fits the institutional position of militias, which operate through entangled relationships with the state \citep{pantaleao2025elections}. Militias can deliver concentrated electoral support to allied politicians. In return, allied politicians can shield militia operations through bureaucratic appointments and law-enforcement priorities. The design captures this exchange as it accumulates over successive elections. Drug-faction expansion produces no detectable effects on any outcome, including turnout. That pattern is consistent with drug factions maintaining control through armed presence and confrontation with the state, with weaker channels of direct political engagement \citep{arias2006drugs, barnes2022territorial}. Appendix~\ref{app:mde} shows why the drug estimates should not be read as proof of zero influence.
+Militias occupy an institutional position that can sustain this pattern. They operate through entangled relationships with the state \citep{pantaleao2025elections}. Militias can deliver concentrated electoral support to allied politicians, who can in turn shield militia operations through bureaucratic appointments and law-enforcement priorities. Similar exchanges between armed vote delivery and protection or economic benefits appear in evidence from Sicily and Colombia \citep{defeo2017mafia, acemoglu2013monopoly}. The exchange can combine inducements, threats, and protection, as in formal models of political influence through bribes and punishment \citep{dalbo2006plata}. The design captures the electoral side of such an exchange as territorial control enters; the institutional side is documented separately by \citet{pantaleao2025elections}, and we read the two pieces of evidence as complementary rather than as a feedback loop estimated jointly here. Drug-trafficking faction expansion produces no detectable estimates on any outcome, including turnout. The null is consistent with drug-trafficking factions maintaining control through armed presence and confrontation with the state, with weaker channels of direct political engagement \citep{arias2006drugs, barnes2022territorial}. It is also consistent with the measurement-asymmetry caveat noted in the data section: drug-trafficking territory is more covertly governed and likely measured with more classical error, which attenuates drug-trafficking estimates toward zero. We therefore read the drug-trafficking null as a lower bound on a real difference between the two faction types, not as proof that drug-trafficking factions are electorally inert.
 
-The militia-drug contrast also matches the semi-strong-state framework in \citet{blattman2023gangrule}. A semi-strong state can police illicit markets through repression, crackdowns, and targeted occupations such as Rio's UPPs. It cannot fully dismantle criminal-governance infrastructure, especially when state personnel are embedded in that infrastructure. In this setting, state rule and criminal rule can be complements. Armed groups with rents to protect may respond to state presence by governing more. Rio militias are an extreme case because the police-militia overlap documented by \citet{pantaleao2025elections} blurs the line between state rule and criminal rule at the local security level. Criminal rents can then become state-institutional capture through elections. Drug factions sit outside this equilibrium and have less access to the institutional channels needed to translate territory into votes.
+The militia-drug contrast also fits the semi-strong-state framework in \citet{blattman2025gangrule}. A semi-strong state can police illicit markets through repression, crackdowns, and targeted occupations such as Rio's UPPs. It cannot fully dismantle criminal-governance infrastructure, especially when state personnel are embedded in that infrastructure. In this setting, state rule and criminal rule may be complements. Armed groups with rents to protect may respond to state presence by governing more. Rio militias provide a stark case because the police-militia overlap documented by \citet{pantaleao2025elections} blurs the line between state rule and criminal rule at the local security level. Criminal rents can then become state-institutional capture through elections. Drug-trafficking factions sit outside this equilibrium and have less access to the institutional channels needed to translate territory into votes.
 
-Complementarity also helps explain why effects concentrate on mayoral races. Mayoral contests involve a single executive office with authority over municipal resources, security priorities, and land-use regulation \citep{ferraz2011electoral}. These domains matter for militia operations. \citet{monteiro2023enterprises} document that militias operate across cooking gas, cable TV, water, electricity, real estate, extortion, and drugs. This makes mayoral policy valuable. Open-list proportional \emph{vereador} races spread competition across many candidates and seats, which dilutes the effect of concentrated support at any single polling station. The same institutional logic that makes mayoral capture valuable also makes city-council effects harder to detect in these outcomes.
-
-The scope condition is institutional rather than geographic. The mechanism should travel to settings where armed groups are embedded in state personnel, control rents that depend on local public authority, and can bargain with elected officials over protection, enforcement, and contracts. In those environments, territorial expansion gives armed groups the incentive and capacity to shape executive elections. The mechanism should be weaker for groups that rule through confrontation with the state, depend on narrower illicit-market rents, or lack a credible channel to exchange votes for state protection. The Rio militia-drug contrast does not imply that one Brazilian organization is uniquely political. It shows that criminal territorial control becomes electorally consequential when criminal governance and state authority operate as complements.
+The scope is institutional rather than geographic. The pattern is most likely in settings where armed groups are embedded in state personnel, control rents that depend on local public authority, and can bargain with elected officials over protection, appointments, contracts, land-use discretion, or enforcement forbearance. The Rio militia-drug contrast does not imply that one Brazilian organization is uniquely political. It is consistent with criminal territorial control becoming electorally consequential when criminal governance and state authority operate as complements.
 
 %==========================================================================
 \section{Conclusion}\label{sec:conclusion}
 %==========================================================================
 
-Militia territorial expansion reduces mayoral competition in metropolitan Rio de Janeiro. Vote concentration rises, the effective number of candidates falls, and the margin of victory widens. These effects pass pre-trends diagnostics and remain robust to plausible violations of parallel trends. Drug-faction expansion produces no detectable effect under the same design. Estimates for open-list proportional \emph{vereador} races are also indistinguishable from zero under the preferred specification.
+Militia territorial entry is associated with lower mayoral competition in metropolitan Rio de Janeiro. Vote concentration rises and the margin of victory widens; the effective number of candidates falls as a reciprocal restatement of the concentration estimate. These estimates pass pre-trends diagnostics and remain robust to plausible violations of parallel trends. Drug-trafficking faction expansion produces no detectable estimates under the same design. Estimates for open-list proportional \emph{vereador} races are also indistinguishable from zero under the preferred specification.
 
-The asymmetry supports the institutional model of political influence documented by \citet{pantaleao2025elections}. Militias convert territorial control into electoral capital through voter mobilization and political protection networks that build over successive election cycles. Drug factions show no detectable temporal effects on electoral competition in this design. Interventions aimed only at the physical presence of armed groups may miss the institutional machinery that connects territorial control to political power.
+The asymmetry is consistent with the institutional model of political influence documented by \citet{pantaleao2025elections}. The estimates are consistent with militias converting territorial control into electoral capital through channels involving voter mobilization, campaign-finance advantage, and political protection networks that build over successive election cycles. Drug-trafficking factions show no detectable temporal estimates on electoral competition in this design, although measurement asymmetry between militia and drug-trafficking territory suggests this null should be read as a lower bound on the militia-drug gap. Interventions aimed only at the physical presence of armed groups may miss the institutional machinery that connects territorial control to political power.
 
 \section*{Data and Code Availability}
 
-Replication code is available in the public \href{https://github.com/vr-rodrigues/armed-factions-elections-replication}{GitHub repository}. The repository includes scripts to construct the analysis panel, reproduce tables and figures, and run the numerical audit. Its README documents where to obtain the underlying data. Electoral returns and voting-location files are publicly available from the TSE open-data repository \citep{tse2024}. Armed-faction territory maps are provided by the Fogo Cruzado Institute \citep{fogocruzado2024}. Redistribution of the original polygons is subject to the provider's terms. Processed analysis files are archived locally and can be made available subject to the same restrictions.
+A complete replication package, including code and processed data, is hosted at the public GitHub repository \url{https://github.com/vr-rodrigues/armed-factions-elections-replication}. Electoral returns and voting-location files are publicly available from the TSE open-data repository \citep{tse2024}. Armed-faction territory maps are provided by the Fogo Cruzado Institute \citep{fogocruzado2024}; we redistribute the derived polling-station exposure indicators in the replication repository under Fogo Cruzado's data-use terms.
 
 \vspace{8pt}
 {\small\linespread{1.0}\selectfont
@@ -336,13 +411,12 @@ Replication code is available in the public \href{https://github.com/vr-rodrigue
 
 Fogo Cruzado territory maps classify areas of metropolitan Rio de Janeiro by observed armed-group control. They combine official gazettes, local press coverage, and triangulated incident reports on armed confrontation. We treat the maps as measures of observed \textit{de facto} territorial exposure, not as legal or administrative boundaries. This distinction matters because armed governance is more visible in some contexts than in others. Militia control often operates quasi-openly through service monopolies and territorial regulation. Drug-faction control can be more fluid and covert.
 
-We ran three validation checks before assigning treatment status to polling stations. Adjacent annual map vintages show that 97.2\% of militia-classified polygons persist across consecutive years, consistent with the long-run stability of militia control documented in the institutional literature \citep{pantaleao2025elections}. We also cross-checked faction-type classifications against the stable classification of \citet{monteiro2023enterprises} and retained only stations whose attribution is consistent under the stable-classification rule. Finally, we inspected a random sample of polygons against the underlying incident logs and verified that the recorded incidents match the attributed armed-group type. The treatment measures exposure to observed territorial control under a documented mapping protocol. Residual measurement error is more likely to attenuate drug-faction effects than to generate the militia-prefeito pattern.
+We ran three validation checks before assigning treatment status to polling stations. Adjacent annual map vintages show that 97.2\% of militia-classified polygons persist across consecutive years, consistent with the long-run stability of militia control documented in the institutional literature \citep{pantaleao2025elections}. We also cross-checked faction-type classifications against the stable classification of \citet{monteiro2023enterprises} and retained only stations whose attribution is consistent under the stable-classification rule. Finally, we inspected a random sample of polygons against the underlying incident logs and verified that the recorded incidents match the attributed armed-group type. The treatment measures exposure to observed territorial control under a documented mapping protocol. Residual measurement error is more likely to attenuate drug-trafficking-faction estimates than to generate the militia-prefeito pattern.
 
-%==========================================================================
-\section{Drug-Faction Null and Minimum Detectable Effects}\label{app:mde}
+\section{Militia-Drug Equality Tests}\label{app:mde}
 %==========================================================================
 
-Table~\ref{tab:mde} reports equality tests between militia and drug-faction ATTs and minimum detectable effects for the drug-faction estimates. The militia and drug-faction samples are disjoint, so the equality test uses the variance of the difference, $\widehat{Var}(\widehat{ATT}_M - \widehat{ATT}_D) = \widehat{SE}_M^2 + \widehat{SE}_D^2$. Minimum detectable effects are $(1.96 + 0.84)\widehat{SE}$ for a two-sided test with $\alpha = 0.05$ and 80\% power.
+Table~\ref{tab:mde} reports equality tests between militia and drug-trafficking-faction ATTs and minimum detectable effects for the drug-trafficking-faction estimates. The militia and drug-trafficking-faction samples are disjoint, so the equality test uses the variance of the difference, $\widehat{Var}(\widehat{ATT}_M - \widehat{ATT}_D) = \widehat{SE}_M^2 + \widehat{SE}_D^2$. Minimum detectable effects are $(1.96 + 0.84)\widehat{SE}$ for a two-sided test with $\alpha = 0.05$ and 80\% power. Because $\text{ENC}\equiv 1/\text{HHI}$, the HHI and ENC equality tests carry the same information on different scales. The tests support the mayoral contrast on the concentration and margin dimensions, while the MDEs keep the drug-trafficking-faction null in scale.
 
 \begin{table}[H]
 \centering
@@ -350,44 +424,20 @@ Table~\ref{tab:mde} reports equality tests between militia and drug-faction ATTs
 \footnotesize
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Outcome & Militia ATT & Drug ATT & Equality $p$ & Drug MDE \\ 
+Outcome & Militia ATT & Drug ATT & Equality $p$ & Drug MDE \\
 \midrule
 \multicolumn{5}{@{}l}{\textit{Panel A: Prefeito (mayoral) races}} \\[2pt]
-HHI                & $+$0.039 & $-$0.003 & 0.011 & 0.039 \\
-ENC                & $-$0.347 & $+$0.078 & 0.008 & 0.401 \\
-Margin of victory  & $+$0.052 & $+$0.002 & 0.032 & 0.056 \\
+HHI                & $+$0.039 & $-$0.003 & 0.006 & 0.036 \\
+ENC                & $-$0.347 & $+$0.078 & 0.006 & 0.384 \\
+Margin of victory  & $+$0.052 & $+$0.002 & 0.033 & 0.056 \\
 \midrule
 \multicolumn{5}{@{}l}{\textit{Panel B: Vereador (city-council) races}} \\[2pt]
-HHI                & $+$0.001 & $+$0.001 & 0.965 & 0.006 \\
-ENC                & $-$0.085 & $-$0.384 & 0.823 & 2.829 \\
-Margin of victory  & $+$0.003 & $+$0.005 & 0.762 & 0.015 \\
+HHI                & $+$0.001 & $+$0.001 & 0.932 & 0.006 \\
+ENC                & $-$0.072 & $-$0.509 & 0.744 & 2.948 \\
+Margin of victory  & $+$0.003 & $+$0.005 & 0.769 & 0.014 \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} Equality tests use the preferred not-yet-treated CS-DID estimates. Drug MDE is the minimum detectable effect at 80\% power and two-sided $\alpha=0.05$, computed as $2.80 \times \widehat{SE}_{Drug}$. The mayoral equality tests reject equality between militia and drug-faction effects on all three competition outcomes, while the MDEs show the detectable effect size in the smaller drug-faction sample.}
-\end{table}
-
-%==========================================================================
-\section{Clustering Robustness}\label{app:clustering}
-%==========================================================================
-
-The main CS-DID estimates use station-level influence-function bootstrap standard errors, the default implementation for the \texttt{did} estimator. The treatment is spatial, so station-level clustering may understate uncertainty if shocks are correlated within faction polygons or municipalities. Table~\ref{tab:cluster} reports a TWFE approximation to the militia-prefeito design under station, territory-polygon, and municipality clustering. This is not a replacement estimand for CS-DID. It shows how inference changes as the cluster level moves to broader spatial units.
-
-\begin{table}[H]
-\centering
-\caption{Clustering Sensitivity: Militia / Prefeito}\label{tab:cluster}
-\footnotesize
-\begin{tabular}{@{}lrrrrrrr@{}}
-\toprule
- &  & \multicolumn{2}{c}{Station} & \multicolumn{2}{c}{Polygon} & \multicolumn{2}{c}{Municipality} \\
-\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
-Outcome & Coef. & SE & $p$ & SE & $p$ & SE & $p$ \\
-\midrule
-HHI               & $+$0.024 & 0.009 & 0.009 & 0.010 & 0.019 & 0.020 & 0.250 \\
-ENC               & $-$0.312 & 0.091 & 0.001 & 0.105 & 0.003 & 0.185 & 0.129 \\
-Margin of victory & $+$0.033 & 0.015 & 0.036 & 0.017 & 0.053 & 0.019 & 0.131 \\
-\bottomrule
-\end{tabular}
-\tabnotes{\textit{Notes:} TWFE approximation to the militia and \emph{prefeito} specification, estimated with station and year fixed effects and eligible-voter weights. The table compares standard errors clustered by polling station, Fogo Cruzado territory polygon, and municipality. Point estimates remain in the same direction under all clustering choices, but municipality-level clustering widens standard errors substantially. The preferred estimates in the main text remain the heterogeneity-robust CS-DID estimates; this table reports inference sensitivity to broader spatial clustering.}
+\tabnotes{\textit{Notes:} Equality tests use the preferred not-yet-treated CS-DID estimates. ``Drug'' refers to drug-trafficking factions; the abbreviation is used in tables for compactness. Drug MDE is the minimum detectable effect at 80\% power and two-sided $\alpha=0.05$, computed as $2.80 \times \widehat{SE}_{Drug}$. The mayoral equality tests reject equality between militia and drug-trafficking-faction estimates on all three competition outcomes; HHI and ENC are reciprocals, so the two tests are not independent. The city-council equality tests do not reject equality.}
 \end{table}
 
 %==========================================================================
@@ -404,52 +454,58 @@ The main specification uses joint Wald tests on pre-treatment event-time coeffic
 \toprule
 Outcome            & Original 95\% CI     & ATT         & Breakdown $\overline{M}$ \\
 \midrule
-HHI                & $[+0.040,\ +0.118]$ & $+0.059$    & $1.50$ \\
-ENC                & $[-1.025,\ -0.378]$ & $-0.521$    & $1.75$ \\
+HHI                & $[+0.040,\ +0.118]$ & $+0.079$    & $1.50$ \\
+ENC                & $[-1.025,\ -0.378]$ & $-0.701$    & $1.75$ \\
 Margin of victory  & $[+0.035,\ +0.121]$ & $+0.077$    & $1.25$ \\
+Turnout            & $[+0.031,\ +0.092]$ & $+0.061$    & $2.00$ \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} Relative-magnitudes sensitivity following \citet{rambachan2023honest} applied to the NYT-controlled CS-DID event-study for militia and \emph{prefeito} outcomes. $\overline{M}$ is the relative-magnitude breakdown value, the largest multiple of the maximum observed pre-period slope violation at which the 95\% robust confidence set no longer excludes zero. Values above 1 indicate that the estimated post-treatment effect survives pre-trend violations of the same magnitude as the largest observed pre-period slope. Event-time window $e \in \{-2, 0, +1\}$ elections relative to treatment, with one pre-period, two post-periods, and reference period $e = -1$. Implementation via the \texttt{HonestDiD} R package.}
+\tabnotes{\textit{Notes:} Relative-magnitudes sensitivity following \citet{rambachan2023honest} applied to the NYT-controlled CS-DID event-study for militia and \emph{prefeito} outcomes. The reported ATT and original confidence interval correspond to the entry-election post-treatment coefficient, $e=0$. $\overline{M}$ is the relative-magnitude breakdown value, the largest multiple of the maximum observed pre-period slope violation at which the 95\% robust confidence set no longer excludes zero. Values above 1 indicate that the estimated post-treatment effect survives pre-trend violations of the same magnitude as the largest observed pre-period slope. Event-time window $e \in \{-2, 0, +1\}$ elections relative to treatment, with one pre-period, two post-periods, and reference period $e = -1$. Implementation via the \texttt{HonestDiD} R package.}
 \end{table}
 
-All three militia and \emph{prefeito} estimates remain robust at $\overline{M} > 1$. HHI has $\overline{M} = 1.50$, ENC has $\overline{M} = 1.75$, and margin of victory has $\overline{M} = 1.25$. If the post-treatment linear violation were as large as the largest observed pre-period slope, the sign of the ATT would still be identified. Figure~\ref{fig:honest_all} plots robust confidence sets as a function of $\overline{M}$.
+All four militia and \emph{prefeito} estimates remain robust at $\overline{M} > 1$. HHI has $\overline{M} = 1.50$, ENC has $\overline{M} = 1.75$, margin of victory has $\overline{M} = 1.25$, and turnout has $\overline{M} = 2.00$. If the post-treatment linear violation were as large as the largest observed pre-period slope, the sign of the ATT would still be identified. Figure~\ref{fig:honest_all} plots robust confidence sets as a function of $\overline{M}$.
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.80\textwidth}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig80_honest_hhi.pdf}
 \caption{HHI}\label{fig:honest_hhi}
 \end{subfigure}
-
-\vspace{0.2em}
-\begin{subfigure}[b]{0.80\textwidth}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig80_honest_enc.pdf}
 \caption{ENC}\label{fig:honest_enc}
 \end{subfigure}
 
-\vspace{0.2em}
-\begin{subfigure}[b]{0.80\textwidth}
+\vspace{0.5em}
+\begin{subfigure}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig80_honest_margin_victory.pdf}
 \caption{Margin of Victory}\label{fig:honest_margin}
 \end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig80_honest_turnout.pdf}
+\caption{Turnout}\label{fig:honest_turnout}
+\end{subfigure}
 \caption{Honest-DiD Sensitivity: Militia and \emph{Prefeito}}\label{fig:honest_all}
-\tabnotes{\textit{Notes:} Robust 95\% confidence sets for the militia and \emph{prefeito} ATTs under relative-magnitude pre-trend violations of size $\overline{M}$ times the maximum pre-period slope. Blue bars show the original 95\% confidence interval; black bars show the robust confidence sets from \citet{rambachan2023honest} at each value of $\overline{M}$. Breakdown values are $\overline{M} = 1.50$ for HHI, $\overline{M} = 1.75$ for ENC, and $\overline{M} = 1.25$ for margin of victory.}
+\tabnotes{\textit{Notes:} Robust 95\% confidence sets for the militia and \emph{prefeito} ATTs under relative-magnitude pre-trend violations of size $\overline{M}$ times the maximum pre-period slope. Blue bars show the original 95\% confidence interval. Black bars show the robust confidence sets from \citet{rambachan2023honest} at each value of $\overline{M}$. Breakdown values are $\overline{M} = 1.50$ for HHI, $\overline{M} = 1.75$ for ENC, $\overline{M} = 1.25$ for margin of victory, and $\overline{M} = 2.00$ for turnout.}
 \end{figure}
 
 %==========================================================================
-\section{Never-Treated Specification}\label{app:nt}
+\section{Broad Control Benchmark}\label{app:nt}
 %==========================================================================
 
-The main text uses not-yet-treated (NYT) controls of the same faction type. This appendix reports the complementary never-treated (NT) specification, which uses the 3,791 polling stations outside stable militia and drug-faction territory as controls. NT stations are never exposed to armed-group territorial control during the sample, but they differ from treated stations on preexisting political trajectories. In Table~\ref{tab:csdid_main_nt}, all three NT militia and \emph{prefeito} Wald pre-trends tests reject clean pre-trends. The contrast between passing NYT pre-trends and failing NT pre-trends is evidence that inside-territory and outside-any-territory stations follow different political trajectories. This is the reason for the within-faction-type design.
+The complementary broad-control specification uses polling stations outside the stable militia and stable drug-trafficking treated samples as controls. In mayoral races, this benchmark contains 3,791 valid control stations. This is not the arithmetic complement of the 4,180-station geocoded roster. The true never-treated geocoded roster contains 3,468 stations, while the broad-control benchmark is defined on the electoral panel and excludes only stable treated units. In Table~\ref{tab:csdid_main_nt}, all three militia and \emph{prefeito} Wald pre-trends tests reject clean pre-trends. Passing NYT pre-trends and failing broad-control pre-trends indicate that stable treated and broad-control stations follow different political trajectories. That difference motivates the within-faction-type design.
 
-The NT estimates for \emph{prefeito} races are directionally similar to the NYT results but larger for militia. This is expected when faction-controlled stations are compared with the broader set of non-faction stations. For drug factions, NT estimates for HHI, margin of victory, and turnout are also larger than the NYT nulls. Because the militia and \emph{prefeito} NT Wald tests reject clean pre-trends, we do not interpret the NT point estimates as causal.
+The broad-control estimates for \emph{prefeito} races are directionally similar to the NYT results but larger for militia. This is expected when faction-controlled stations are compared with a broader set of polling stations. For drug-trafficking factions, broad-control estimates for HHI, margin of victory, and turnout are also larger than the NYT nulls. Because the militia and \emph{prefeito} Wald tests reject clean pre-trends, we do not interpret these point estimates as causal.
 
 \begin{table}[H]
 \centering
-\caption{CS-DID: Mayoral Electoral Outcomes, Never-Treated Controls}\label{tab:csdid_main_nt}
+\caption{CS-DID: Mayoral Electoral Outcomes, Broad Control Benchmark}\label{tab:csdid_main_nt}
 \footnotesize
 \begin{tabular}{@{}l cccc cccc@{}}
 \toprule
@@ -462,14 +518,14 @@ Inside territory & $+$0.068$^{***}$ & $-$0.774$^{***}$ & $+$0.041$^{***}$ & $+$0
 Wald $p$         & [$<$0.001] & [$<$0.001] & [0.010] & [0.016] & [0.073] & [0.232] & [0.523] & [0.205] \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation, using the never-treated control group of stations outside any faction territory. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory. Outcomes measured on \emph{prefeito} mayoral races; turnout is defined at the station-election level. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Values below 0.05 indicate pre-trend violations. Universal base period, observations weighted by eligible voters, unbalanced panel. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation, using the broad control benchmark described in Appendix~\ref{app:nt}. Each coefficient reports the $\widehat{ATT}$ on the listed outcome from a polling station's entry into a faction territory. Outcomes measured on \emph{prefeito} mayoral races. Turnout is defined at the station-election level. $N$ is the number of treated polling stations. Standard errors in parentheses clustered at the polling-station level, with influence-function bootstrap. Wald $p$-values for the joint pre-trends test in brackets. Values below 0.05 indicate pre-trend violations. Universal base period, observations weighted by eligible voters, unbalanced panel. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
 \end{table}
 
-For \emph{vereador} races, one of the six NT coefficients reaches conventional significance. As in the mayoral results, NT pre-trends diagnostics are mixed. We treat these estimates as benchmarks rather than alternative causal estimates.
+For \emph{vereador} races, one of the six broad-control coefficients reaches conventional significance. As in the mayoral results, pre-trends diagnostics are mixed. We treat these estimates as benchmarks rather than alternative causal estimates.
 
 \begin{table}[H]
 \centering
-\caption{CS-DID: City-Council (\emph{Vereador}) Competition, Never-Treated Controls}\label{tab:csdid_vereador_nt}
+\caption{CS-DID: City-Council (\emph{Vereador}) Competition, Broad Control Benchmark}\label{tab:csdid_vereador_nt}
 \footnotesize
 \begin{tabular}{@{}l ccc ccc@{}}
 \toprule
@@ -482,7 +538,7 @@ Inside territory & $+$0.005 & $+$1.057 & $+$0.006 & $+$0.008 & $-$4.128 & $+$0.0
 Wald $p$         & [0.348]  & [0.005]  & [0.454]  & [0.132]  & [0.181]  & [0.163]  \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation, using the never-treated control group. Raw outcomes on \emph{vereador} city-council races. Conventions as in Table~\ref{tab:csdid_main_nt}. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
+\tabnotes{\textit{Notes:} \citet{callaway2021did} estimator with dynamic aggregation, using the broad control benchmark described in Appendix~\ref{app:nt}. Raw outcomes on \emph{vereador} city-council races. Conventions as in Table~\ref{tab:csdid_main_nt}. $^{***}\,p<0.01$, $^{**}\,p<0.05$, $^{*}\,p<0.10$.}
 \end{table}
 
 %==========================================================================
@@ -522,7 +578,7 @@ Elections observed & Stations & Share \\
 
 \subsection{Annual master territory map}
 
-Fogo Cruzado polygons are published annually and revised as territorial disputes unfold. A station inside a drug-faction polygon in 2010 may be reclassified as militia-controlled in 2018 after a takeover. It may also leave the controlled-polygon set in a year when Fogo Cruzado records a reduction in active armed-group presence. Intersecting each election's voting locations with only that year's polygon map would define treatment against a shifting baseline and mix territorial entry with cartographic revision.
+Fogo Cruzado polygons are published annually and revised as territorial disputes unfold. A station inside a drug-trafficking-faction polygon in 2010 may be reclassified as militia-controlled in 2018 after a takeover. It may also leave the controlled-polygon set in a year when Fogo Cruzado records a reduction in active armed-group presence. Intersecting each election's voting locations with only that year's polygon map would define treatment against a shifting baseline and mix territorial entry with cartographic revision.
 
 We construct an annual master territory map as the union of all 18 annual control polygons published between 2007 and 2024, computed in UTM 23S projection (EPSG:31983) for metric accuracy. Each voting location receives two measures. The year-specific inside-polygon indicator builds the treatment cohort $G_i$. For each station-year pair, we record whether the station falls inside that year's control polygon and the dominant faction type. The second measure is distance to the ever-controlled envelope, a time-invariant geographic covariate used in robustness checks.
 
@@ -550,9 +606,9 @@ Switchers: Militia $\rightarrow$ Drug     &    25     & 3.5\% \\
 Never-treated (outside any territory)     & 3{,}468   & --- \\
 \bottomrule
 \end{tabular}
-\tabnotes{\textit{Notes:} Classification applies the stable-attribution rule of \citet{monteiro2023enterprises}. Ever-treated indicates that the station falls inside at least one annual control polygon during 2007 through 2024, and never-treated stations never fall inside any polygon. Switchers are excluded from the main analysis to isolate the faction-specific mechanism. The 398 militia and 240 drug counts reported in the main text and in Table~\ref{tab:csdid_main} reflect the further restriction to stations with non-missing \emph{prefeito} outcomes in at least one pre-treatment and one post-treatment period. The 3,791 never-treated pool used in the never-treated specification of Appendix~\ref{app:nt} is larger than the 3,468 count here because the regression pool adds switchers and electoral-panel stations that lack a Monteiro classification but have valid polling-station outcomes.}
+\tabnotes{\textit{Notes:} Classification applies the stable-attribution rule of \citet{monteiro2023enterprises}. Ever-treated indicates that the station falls inside at least one annual control polygon during 2007 through 2024, and never-treated stations never fall inside any polygon. Switchers are excluded from the main analysis to isolate the faction-specific mechanism. The 398 militia and 240 drug counts reported in the main text and in Table~\ref{tab:csdid_main} reflect the further restriction to stable treated stations with non-missing \emph{prefeito} outcomes and eligible-voter weights. Cohorts first treated in 2008 are included in these counts, although they do not contribute to universal-base ATT cells that require a pre-treatment election. The broad-control benchmark in Appendix~\ref{app:nt} uses 3,791 valid \emph{prefeito} locations outside the stable treated samples and should not be read as the true never-treated roster reported in this table.}
 \end{table}
 
-We exclude switchers from the estimation sample to isolate faction-specific mechanisms. Keeping them would combine entry into militia control and entry into drug control in a single ATT. It would also weaken the within-faction-type NYT comparison because a station that enters militia territory after a period under drug control experiences two treatment events. Switchers are likely selected on the geographic and political conditions that make an area contested. Dropping them narrows the scope of inference to stable faction control but sharpens identification. A robustness specification that treats switchers as a third treatment arm is feasible but outside the current analysis. The final sample requires a valid mayoral outcome in at least one pre-treatment and one post-treatment period, a stable faction-type classification, valid coordinates, and location in one of the 20 metropolitan municipalities. These restrictions produce the 398 stable-militia and 240 stable-drug treated stations, plus the 3,791 never-treated stations reported in the main text and displayed in Figure~\ref{fig:maps}.
+We exclude switchers from the estimation sample to isolate faction-specific mechanisms. Keeping them would combine entry into militia control and entry into drug control in a single ATT. It would also weaken the within-faction-type NYT comparison because a station that enters militia territory after a period under drug control experiences two treatment events. Switchers are likely selected on the geographic and political conditions that make an area contested. Dropping them narrows the scope of inference to stable faction control but sharpens identification. A robustness specification that treats switchers as a third treatment arm is feasible but outside the current analysis. The final treated sample requires valid coordinates, a stable faction-type classification, non-missing mayoral outcomes, eligible-voter weights, and location in one of the 20 metropolitan municipalities. These restrictions produce the 398 stable-militia and 240 stable-drug treated stations used in the main mayoral estimates.
 
 \end{document}

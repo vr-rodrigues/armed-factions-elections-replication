@@ -36,7 +36,22 @@ Recommended local raw-data layout:
 data/raw/tse/votacao_secao/
 data/raw/tse/candidatos/
 data/raw/tse/locais_votacao/
+data/raw/tse/prestacao_contas/
 ```
+
+Campaign-finance archives are used only by optional mechanism scripts. The
+expected official TSE resources are:
+
+- `prestacao_contas_2008.zip`
+- `prestacao_final_2012.zip`
+- `prestacao_contas_final_2016.zip`
+- `prestacao_de_contas_eleitorais_candidatos_2020.zip`
+- `prestacao_de_contas_eleitorais_candidatos_2024.zip`
+
+Use `code/94_campaign_finance_outcomes.R --download` to fetch these archives
+into `data/raw/tse/prestacao_contas/` before processing campaign spending.
+The processing script deflates monetary values to 2024 reais using IPCA from
+Banco Central do Brasil SGS series 433 and writes `data/ipca_deflator_2024.csv`.
 
 ## 2. Fogo Cruzado territory maps
 
@@ -67,6 +82,12 @@ The current analysis scripts expect the following processed files in `data/`:
 - `locais_votacao_treatment_annual.csv`
 - `loc_faction_changes.csv`
 - `loc_to_territory.csv`
+- `candidate_profile_by_location.csv`
+- `party_bloc_by_location.csv`
+- `party_specific_by_location.csv`
+- `campaign_finance_by_candidate.csv`
+- `campaign_finance_by_location.csv`
+- `ipca_deflator_2024.csv`
 - `territory_to_cluster.csv`
 - `territory_treatment.csv`
 - `territory_panel_final.csv`

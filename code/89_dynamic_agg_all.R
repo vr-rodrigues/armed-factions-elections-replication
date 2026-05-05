@@ -2,7 +2,8 @@
 # 89_dynamic_agg_all.R — Dynamic Aggregation for All Specifications
 # ============================================================================
 # Produces overall ATTs via aggte(type = "dynamic") for:
-#   - {Militia, Drug} x {Prefeito, Vereador} x {HHI, ENC, Margin, Turnout}
+#   - {Militia, Drug} x {Prefeito, Vereador} x {HHI, ENC, Margin}
+#   - {Militia, Drug} x {Prefeito} x {Turnout}
 #   - Both NYT and NT control groups
 # Reports ATT, SE, p-value, Wald pre-trends p, and N for each cell.
 # Output: tab89_dynamic_overall.csv
@@ -135,8 +136,8 @@ for (sp in specs) {
   d_nt  <- dt_full[change_type %in% c(sp$filter, "never_treated")]
   for (cg in cargos) {
     for (oc in outcomes) {
-      # Turnout is station-level (same for prefeito/vereador), we still report it under each
-      # but it is effectively the same regression; drop vereador duplicate in main output.
+      # Turnout is a station-election participation measure. Report it once
+      # with Prefeito and skip the mechanically duplicated Vereador cell.
       if (oc == "turnout" && cg == "Vereador") next
 
       lbl <- sprintf("%s / %s / %s [NYT]", sp$name, cg, oc)

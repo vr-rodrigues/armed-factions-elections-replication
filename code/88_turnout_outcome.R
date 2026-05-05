@@ -125,11 +125,11 @@ run_cs <- function(d_run, outcome, lbl, ctrl_group) {
       allow_unbalanced_panel = TRUE, weightsname = "qt_aptos",
       print_details = FALSE
     )
-    agg <- aggte(att, type = "simple", na.rm = TRUE)
+    agg <- aggte(att, type = "dynamic", na.rm = TRUE)
     p <- 2 * pnorm(-abs(agg$overall.att / agg$overall.se))
 
     # Wald pre-trends
-    dyn <- aggte(att, type = "dynamic", na.rm = TRUE)
+    dyn <- agg
     pre_idx <- which(dyn$egt < 0 & !is.na(dyn$se.egt))
     p_wald <- NA_real_
     if (length(pre_idx) >= 1) {
@@ -167,7 +167,9 @@ run_cs <- function(d_run, outcome, lbl, ctrl_group) {
 
 # ── 4. Run all specs ────────────────────────────────────────────────────────
 
-cargos <- c("Prefeito", "Vereador")
+# Turnout is a station-election outcome, not office-specific. Keep it under
+# Prefeito to avoid mechanically duplicating the same result under Vereador.
+cargos <- c("Prefeito")
 specs <- list(
   list(name = "Militia", filter = "stable_Militia"),
   list(name = "Drug",    filter = "stable_Drug")
@@ -245,7 +247,7 @@ for (sp in c("Militia", "Drug")) {
 }
 
 cat(sprintf("\nWritten: tab88_turnout_overall.csv, tab88_turnout_es.csv, %d fig88_es_*.pdf\n",
-            2 * 2))
+            2 * length(cargos)))
 cat("DONE — 88_turnout_outcome.R\n")
 
 

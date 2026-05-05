@@ -2,7 +2,7 @@
 # 80_honest_did.R — Honest-DiD / Rambachan-Roth Sensitivity Analysis
 # ============================================================================
 #
-# For each of the three militia/prefeito cells (HHI, ENC, margin_victory),
+# For each of the four militia/prefeito cells (HHI, ENC, margin_victory, turnout),
 # compute the "breakdown" M-bar: the multiple of the largest observed
 # pre-treatment slope that would have to hold in the post-treatment period
 # to reverse the sign of (or nullify statistical significance of) the ATT.
@@ -30,6 +30,8 @@ library(ggplot2)
 .script_dir <- if (!is.na(.script_file)) dirname(normalizePath(.script_file)) else getwd()
 BASE_DIR <- normalizePath(file.path(.script_dir, ".."), winslash = "/", mustWork = TRUE)
 OUT_DIR  <- file.path(BASE_DIR, "results")
+FIG_DIR  <- file.path(BASE_DIR, "paper", "figures")
+dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 
 cat("============================================================\n")
 cat("80_honest_did.R — Rambachan-Roth sensitivity for militia/prefeito\n")
@@ -45,7 +47,7 @@ dt_chg   <- fread(file.path(BASE_DIR, "data", "loc_faction_changes.csv"))
 dt_elec[, loc_id := as.character(loc_id)]
 dt_elec[, DS_CARGO := tools::toTitleCase(tolower(trimws(DS_CARGO)))]
 dt_elec[, election_year := as.numeric(election_year)]
-for (col in c("hhi", "enc", "margin_victory"))
+for (col in c("hhi", "enc", "margin_victory", "total_votes"))
   dt_elec[, (col) := as.numeric(get(col))]
 dt_aptos[, loc_id := as.character(loc_id)]
 dt_aptos[, election_year := as.numeric(election_year)]
@@ -72,14 +74,22 @@ dt_faction <- merge(dt_elec, loc_info[, .(loc_id, gvar_cs)], by = "loc_id")
 dt_faction <- merge(dt_faction, dt_aptos[, .(loc_id, election_year, qt_aptos)],
                     by = c("loc_id", "election_year"), all.x = TRUE)
 dt_faction <- dt_faction[election_year %in% elec_years & !is.na(qt_aptos) & qt_aptos > 0]
+dt_faction[, turnout := total_votes / qt_aptos]
+dt_faction[is.na(turnout) | is.infinite(turnout) | turnout <= 0 | turnout > 1,
+           turnout := NA_real_]
 
 cat(sprintf("Militia panel: %d obs | %d locs\n\n",
             nrow(dt_faction), uniqueN(dt_faction$loc_id)))
 
 # ── 2. Run CS-DID + HonestDiD for each outcome ─────────────────────────────
 
-outcomes <- c("hhi", "enc", "margin_victory")
-outcome_labels <- c(hhi = "HHI", enc = "ENC", margin_victory = "Margin of Victory")
+outcomes <- c("hhi", "enc", "margin_victory", "turnout")
+outcome_labels <- c(
+  hhi = "HHI",
+  enc = "ENC",
+  margin_victory = "Margin of Victory",
+  turnout = "Turnout"
+)
 
 results_tab <- list()
 
@@ -159,7 +169,8 @@ for (oc in outcomes) {
   results_tab[[length(results_tab) + 1]] <- data.table(
     outcome        = oc,
     outcome_label  = outcome_labels[oc],
-    att_original   = mean(betahat[(n_pre + 1):(n_pre + n_post)]),
+    post_horizon   = es_egt[ord][n_pre + 1],
+    att_original   = betahat[n_pre + 1],
     ci_lo_original = orig$lb,
     ci_hi_original = orig$ub,
     breakdown_mbar = breakdown
@@ -185,6 +196,8 @@ for (oc in outcomes) {
     labs(x = expression(bar(M)), y = "ATT")
 
   ggsave(file.path(OUT_DIR, sprintf("fig80_honest_%s.pdf", oc)),
+         p, width = 7, height = 3.2)
+  ggsave(file.path(FIG_DIR, sprintf("fig80_honest_%s.pdf", oc)),
          p, width = 7, height = 3.2)
 }
 

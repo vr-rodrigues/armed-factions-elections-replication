@@ -103,7 +103,8 @@ The main analysis scripts regenerate:
 - clustering and estimator robustness checks;
 - minimum-detectable-effect and equality-test tables;
 - summary statistics, balance tables, and placebo diagnostics;
-- turnout outcome tables.
+- turnout outcome tables;
+- mechanism tables decomposing turnout and exposure duration;
 
 The audit suite verifies numbers in the manuscript against the generated results.
 

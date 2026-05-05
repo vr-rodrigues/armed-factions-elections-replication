@@ -28,7 +28,9 @@ $steps = @(
   @{ Engine = "R";  Script = "code/86_equality_test_mde.R" },
   @{ Engine = "R";  Script = "code/87_balance_table.R" },
   @{ Engine = "R";  Script = "code/88_turnout_outcome.R" },
-  @{ Engine = "R";  Script = "code/89_dynamic_agg_all.R" }
+  @{ Engine = "R";  Script = "code/89_dynamic_agg_all.R" },
+  @{ Engine = "R";  Script = "code/90_turnout_decomposition.R" },
+  @{ Engine = "R";  Script = "code/91_exposure_duration.R" }
 )
 
 if (-not $SkipMaps) {
