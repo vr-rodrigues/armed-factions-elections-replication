@@ -1,112 +1,72 @@
-# Data Collection Notes
+# Data
 
-This folder is intentionally not populated in the public GitHub repository. The replication scripts expect the files listed below after the user has collected or been authorized to use the data.
-
-## 1. Public electoral data from TSE
-
-Source: Tribunal Superior Eleitoral, Repositorio de Dados Eleitorais  
-URL: <https://dadosabertos.tse.jus.br/>
-
-Download:
-
-- `votacao_secao_RJ_2008.csv`
-- `votacao_secao_RJ_2012.csv`
-- `votacao_secao_RJ_2016.csv`
-- `votacao_secao_RJ_2020.csv`
-- `votacao_secao_RJ_2024.csv`
-- `consulta_cand_2008_RJ.csv`
-- `consulta_cand_2012_RJ.csv`
-- `consulta_cand_2016_RJ.csv`
-- `consulta_cand_2020_RJ.csv`
-- `consulta_cand_2024_RJ.csv`
-- `locais_votacao_RJ_2010.csv`
-- `locais_votacao_RJ_2012.csv`
-- `locais_votacao_RJ_2014.csv`
-- `locais_votacao_RJ_2016.csv`
-- `locais_votacao_RJ_2018.csv`
-- `locais_votacao_RJ_2020.csv`
-- `locais_votacao_RJ_2022.csv`
-- `locais_votacao_RJ_2024.csv`
-
-The paper uses five municipal elections, 2008-2024. Voting-location files from national-election years are used to recover geocoding continuity for locations not observed in a municipal-year file.
-
-Recommended local raw-data layout:
+The repository tracks no data. The code reads every input from one folder, set by the environment variable
+`AFE_DADOS` (default: this `data/` folder), and writes intermediate files to the same folder:
 
 ```text
-data/raw/tse/votacao_secao/
-data/raw/tse/candidatos/
-data/raw/tse/locais_votacao/
-data/raw/tse/prestacao_contas/
+$AFE_DADOS/
+  basedosdados_tse/   inputs, written by base_dados_bd/extrair_bd.py
+  basedosdados_v2/    inputs, written by base_dados_bd/extrair_bd_v2.py
+  basedosdados_v3/    inputs, written by base_dados_bd/extrair_bd_v3.py
+  basedosdados_v4/    inputs, written by base_dados_bd/extrair_bd_v4.py
+  mapas_anuais/       inputs, armed-group maps (Section 2 below)
+  pipeline_v2/        written by pipeline_v2/run_all.R
+  pipeline_v2_ext/    written by pipeline_v2/run_ext.R and fase3/W00, W17
 ```
 
-Campaign-finance archives are used only by optional mechanism scripts. The
-expected official TSE resources are:
+`input_files.csv` lists every input file with the number of rows (parquet) or polygons (maps) in the files used for
+the paper, so that a new extraction can be checked against ours.
 
-- `prestacao_contas_2008.zip`
-- `prestacao_final_2012.zip`
-- `prestacao_contas_final_2016.zip`
-- `prestacao_de_contas_eleitorais_candidatos_2020.zip`
-- `prestacao_de_contas_eleitorais_candidatos_2024.zip`
+## 1. Electoral and census data: Base dos Dados
 
-Use `code/94_campaign_finance_outcomes.R --download` to fetch these archives
-into `data/raw/tse/prestacao_contas/` before processing campaign spending.
-The processing script deflates monetary values to 2024 reais using IPCA from
-Banco Central do Brasil SGS series 433 and writes `data/ipca_deflator_2024.csv`.
+[Base dos Dados](https://basedosdados.org) publishes the official files of the Superior Electoral Court (TSE) and of
+the Brazilian Institute of Geography and Statistics (IBGE) as public BigQuery tables. The four scripts in
+`base_dados_bd/` query them for the 20 municipalities of metropolitan Rio de Janeiro used in the paper and save parquet
+files. No personal data are selected (candidate tax IDs, e-mail addresses and voter registration numbers are left out).
 
-## 2. Fogo Cruzado territory maps
+| Script | Base dos Dados tables | Years |
+|---|---|---|
+| `extrair_bd.py` | `br_tse_eleicoes`: `resultados_candidato_secao`, `resultados_partido_secao`, `detalhes_votacao_secao`, `perfil_eleitorado_local_votacao`, `local_secao`, `candidatos` | elections 2006-2024 |
+| `extrair_bd_v2.py` | `br_tse_eleicoes.partidos`, `br_tse_eleicoes.resultados_candidato_municipio`, `br_geobr_mapas.setor_censitario_2010`, `br_ibge_censo_2022.setor_censitario`, `br_geobr_mapas.municipio` | 2004-2024; census 2010 and 2022 |
+| `extrair_bd_v3.py` | `br_tse_eleicoes.perfil_eleitorado_secao` (aggregated by section), `br_tse_eleicoes.receitas_candidato` (aggregated by candidate), and the 2004 election by section | 2004-2024 |
+| `extrair_bd_v4.py` | `br_ibge_censo_demografico.setor_censitario_basico_2010` | census 2010 |
 
-Source: Fogo Cruzado Institute  
-Official repository: <https://github.com/fogocruzadoapp/mapafc>
+To run them you need a Google Cloud project with the BigQuery API enabled, which is billed for the queries, and
+Application Default Credentials:
 
-Requested data:
-
-- annual armed-faction territory polygons for metropolitan Rio de Janeiro;
-- annual coverage from 2007 through 2024;
-- faction-type labels distinguishing militia and drug-faction control where available;
-- metadata sufficient to identify polygon vintage and source year.
-
-Redistribution note: original polygons are subject to the provider's data-use terms. If redistribution is not permitted, obtain the data directly from Fogo Cruzado and place authorized copies in the local raw-data directory before running the scripts.
-
-Recommended local raw-data layout:
-
-```text
-data/raw/fogo_cruzado/
+```bash
+pip install -r requirements.txt
+gcloud auth application-default login
+python base_dados_bd/extrair_bd.py --project <your-project> --dry-run   # bytes to be processed, no cost
+GCP_PROJECT=<your-project> bash run_replication.sh extract              # all four scripts
 ```
 
-## 3. Derived analysis files expected by the scripts
+The full extraction processes about 10 GB, within BigQuery's monthly free tier at the time of writing. The paper
+uses extractions made in October and November 2026. Base dos Dados updates its tables, so a later extraction can
+differ slightly from ours; compare it with `input_files.csv`.
 
-The current analysis scripts expect the following processed files in `data/`:
+## 2. Armed-group maps: Fogo Cruzado and GENI/UFF
 
-- `electoral_competition_measures.csv`
-- `qt_aptos_by_location.csv`
-- `locais_votacao_treatment_annual.csv`
-- `loc_faction_changes.csv`
-- `loc_to_territory.csv`
-- `candidate_profile_by_location.csv`
-- `party_bloc_by_location.csv`
-- `party_specific_by_location.csv`
-- `campaign_finance_by_candidate.csv`
-- `campaign_finance_by_location.csv`
-- `ipca_deflator_2024.csv`
-- `territory_to_cluster.csv`
-- `territory_treatment.csv`
-- `territory_panel_final.csv`
-- `municipios_crosswalk.csv`
-- `municipios_rj.geojson`
-- `annual/*.geojson`
-- `mgarj_*_polygons.geojson`
-- `mgarj_*_poligonos_table.csv`
+Treatment comes from the *Mapa Histórico dos Grupos Armados do Rio de Janeiro*, produced by the Grupo de Estudos dos
+Novos Ilegalismos (GENI/UFF) and the Instituto Fogo Cruzado from reports to the Disque-Denúncia hotline. It has two
+annual layers for 2007-2024: areas under armed territorial control and areas under armed territorial influence. The
+paper uses the vector polygons collected on 10 March 2026 from <https://fogocruzado.org.br/mapadosgruposarmados/>.
+The site has since moved to displaying the maps as images. The polygons are subject to Fogo Cruzado's data-use terms
+and are not redistributed here; requests for the vector files should be addressed to Fogo Cruzado.
 
-The scripts in `code/01_*` through `code/47_*` construct these files from the raw data. The scripts in `code/70_*` onward reproduce the paper tables and figures from the processed analysis files.
+Place them in `$AFE_DADOS/mapas_anuais/`, one GeoJSON file per year and layer (WGS 84):
 
-## 4. Files excluded from git
+| File | Attribute naming the armed group |
+|---|---|
+| `<year>_controle.geojson`, 2007-2024 | `Grupo_Armado_soControle` |
+| `<year>_influencia.geojson`, 2007-2024 | `Grupo_Armado_soFlexivel` |
 
-The public repository does not track:
+Group values are `Milícia` (militias) and `CV`, `TCP` and `ADA` (drug-trafficking factions). Each polygon also carries
+`mvFeatureId`. The number of polygons per file is in `input_files.csv`.
 
-- raw TSE vote-section CSVs;
-- Fogo Cruzado original polygons unless redistribution is authorized;
-- processed analysis CSV/GeoJSON files;
-- generated figures and tables;
-- local logs and temporary files.
+## 3. Files included in the repository
 
-This keeps the GitHub repository focused on code and documentation while preserving a clear path for researchers to collect the data.
+- `pipeline_v2/R_ext/ideologia_partidos.csv`: left, center or right classification of parties by party number and
+  period, following Table A1 of Colonnelli, Pinho Neto and Teso (2025), "Politics at Work", *American Economic Review*
+  115(10): 3367-3414.
+- `pipeline_v2/R_ext/00_config_ext.R`: party of the state governor at each municipal election.

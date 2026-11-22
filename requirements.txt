@@ -1,5 +1,4 @@
-pandas
-numpy
-geopandas
-matplotlib
-
+google-cloud-bigquery>=3.40
+db-dtypes>=1.3
+pandas>=2.3
+pyarrow>=23.0

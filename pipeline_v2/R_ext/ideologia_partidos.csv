@@ -1,0 +1,42 @@
+numero,ano_ini,ano_fim,siglas_na_base,categoria,regra
+10,2006,2024,PRB/REPUBLICANOS,direita,tabela A1 (PRB)
+11,2006,2024,PP,direita,tabela A1 (PP)
+12,2006,2024,PDT,esquerda,tabela A1 (PDT)
+13,2006,2024,PT,esquerda,tabela A1 (PT)
+14,2006,2022,PTB,centro,tabela A1 (PTB)
+15,2006,2024,PMDB/MDB,centro,tabela A1 ((P)MDB)
+16,2006,2024,PSTU,esquerda,tabela A1 (PSTU)
+17,2006,2020,PSL,direita,tabela A1 (PSL)
+18,2016,2024,REDE,esquerda,tabela A1 (REDE)
+19,2006,2022,PTN/PODE,direita,tabela A1 (PODE); PTN é o predecessor do PODE
+20,2006,2022,PSC,direita,tabela A1 (PSC)
+20,2024,2024,PODE,direita,tabela A1 (PODE); em 2024 o Podemos (que incorporou o PSC) usa o número 20
+21,2006,2024,PCB,esquerda,tabela A1 (PCB)
+22,2006,2024,PL/PR,direita,tabela A1 (PL); PR é o nome do PL entre 2006 e 2019
+23,2006,2024,PPS/CIDADANIA,direita,tabela A1 (PPS); Cidadania é o novo nome do PPS
+25,2006,2020,PFL/DEM,direita,tabela A1 (DEM); PFL é o nome do DEM até 2007
+25,2024,2024,PRD,centro,fusão PTB (centro; 7.67% dos filiados) + Patriota (direita; 1.63%): predecessor maior; robustez: não classificado
+26,2006,2006,PAN,centro,incorporado ao PTB em 2007 (sucessor)
+27,2006,2024,PSDC/DC,direita,tabela A1 (DC); PSDC é o nome anterior
+28,2006,2024,PRTB,direita,tabela A1 (PRTB)
+29,2006,2024,PCO,esquerda,tabela A1 (PCO)
+30,2016,2024,NOVO,direita,tabela A1 (NOVO)
+31,2006,2018,PHS,direita,tabela A1 (PHS)
+33,2006,2024,PMN/MOBILIZA,esquerda,tabela A1 (PMN); Mobiliza é o novo nome do PMN
+35,2016,2024,PMB,direita,tabela A1 (PMB)
+36,2006,2024,PTC/AGIR,direita,tabela A1 (PTC); Agir é o novo nome do PTC
+40,2006,2024,PSB,esquerda,tabela A1 (PSB)
+43,2006,2024,PV,esquerda,tabela A1 (PV)
+44,2006,2018,PRP,direita,tabela A1 (PRP)
+44,2022,2024,UNIÃO,direita,fusão DEM (direita) + PSL (direita)
+45,2006,2024,PSDB,centro,tabela A1 (PSDB)
+50,2006,2024,PSOL,esquerda,tabela A1 (PSOL)
+51,2012,2022,PEN/PATRIOTA,direita,tabela A1 (PATRI); PEN é o nome anterior
+54,2012,2018,PPL,esquerda,tabela A1 (PPL)
+55,2012,2024,PSD,centro,tabela A1 (PSD)
+56,2006,2006,PRONA,direita,incorporado ao PR (atual PL) em 2006 (sucessor)
+65,2006,2024,PC do B,esquerda,tabela A1 (PCdoB)
+70,2006,2024,PT do B/AVANTE,centro,tabela A1 (AVANTE); PT do B é o nome anterior
+77,2014,2024,SOLIDARIEDADE,esquerda,tabela A1 (SD)
+80,2020,2024,UP,esquerda,tabela A1 (UP)
+90,2014,2022,PROS,esquerda,tabela A1 (PROS)

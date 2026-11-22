@@ -1,7 +1,13 @@
-data.table
-did
-fixest
-fwildclusterboot
-ggplot2
-HonestDiD
-
+# Versions used to produce the paper (R 4.5.2; sf built with GEOS 3.13.1, GDAL 3.11.4, PROJ 9.7.0)
+data.table 1.18.2.1
+arrow 23.0.1.1
+sf 1.1.0
+did 2.3.0
+DRDID 1.2.3
+HonestDiD 0.2.6
+fixest 0.13.2
+ggplot2 4.0.2
+patchwork 1.3.2
+scales 1.4.0
+igraph 2.3.0
+digest 0.6.39

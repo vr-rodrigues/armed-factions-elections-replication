@@ -1,28 +1,20 @@
-# Data files are documented in data/README.md and are not tracked publicly.
+# Data are documented in data/README.md and are not tracked.
 data/*
 !data/README.md
+!data/input_files.csv
 
 # Generated outputs
-results/*
-!results/.gitkeep
-logs/*
-!logs/.gitkeep
-audit/logs/*
-!audit/logs/.gitkeep
-audit/outputs/*
-!audit/outputs/.gitkeep
+logs/
+fase1/resultados/
+fase2/resultados/
+fase3/resultados/
+paper_v2/tables/
+paper_v2/figures/
+pipeline_v2/checks/
+pipeline_v2/checks_ext/
+pipeline_v2/logs/
 
-# Large compiled paper artifacts
-paper/*.pdf
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.log
-paper/*.out
-paper/figures/*
-!paper/figures/.gitkeep
-
-# Local/editor/runtime files
+# Local and runtime files
 .Rhistory
 .RData
 .Rproj.user/
